@@ -10,10 +10,11 @@ public:
 	string Name;
 
 	Monster();
-	Monster(string name, Position pos, int lives = 1);
+	Monster(string name, Position pos, int lives);
 	~Monster();
 
 	//Move Monster according to player's position:AI
-	void Move(Position playerPos);
+	bool Move(Position & playerPos, int & monCount, string monName);
+	void respawn(string monName, int & monCount);
 };
 
