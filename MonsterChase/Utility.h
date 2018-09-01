@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
-#include <time.h>
+
+#include <time.h>//time()
 
 
 struct Position

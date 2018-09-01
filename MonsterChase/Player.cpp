@@ -48,7 +48,7 @@ void Player::Move(char direction)
 	case 'S':
 		if (Pos.y < 101)
 		{
-			Pos.y--;
+			Pos.y++;
 			std::cout << "Player moves down to [" << Pos.x << ", " << Pos.y << "].\n";
 		}
 		else
@@ -59,7 +59,7 @@ void Player::Move(char direction)
 	case 'D':
 		if (Pos.x < 101)
 		{
-			Pos.x--;
+			Pos.x++;
 			std::cout << "Player moves right to [" << Pos.x << ", " << Pos.y << "].\n";
 		}
 		else

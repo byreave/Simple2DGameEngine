@@ -1,5 +1,5 @@
 #include<iostream>
-#include<stdlib.h>
+#include<stdlib.h> //random
 #include "Monster.h"
 #include "Player.h"
 
@@ -13,7 +13,7 @@ int main()
 	int monCount = 0; //For naming
 	char move;
 	Monster * mon;
-	string playerName, monName;
+	char playerName[50], monName[50];
 
 	//startup
 	cout << "Enter number of monsters to start: \n";
