@@ -82,7 +82,7 @@ void Monster::respawn(char * monName, int & monCount)
 			Name[i + strlen(monName)] = 'A' + tmpCount % 26;
 		else
 		{
-			Name[i + strlen(monName)] = 'A' + monCount / 26;
+			Name[i + strlen(monName)] = 'A' + monCount / 26 - 1;
 			tmpCount -= 26;
 		}
 	}
