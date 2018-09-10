@@ -5,9 +5,10 @@ class Player
 public:
 	int Lives;
 	Position Pos;
+	char * Name;
 
 	Player(Position pos, int lives = 3);
-	Player();
+	Player(char * name);
 	
 	~Player();
 

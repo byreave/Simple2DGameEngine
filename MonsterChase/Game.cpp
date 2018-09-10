@@ -24,11 +24,11 @@ int main()
 	cin >> playerName;
 	monCount = monNumber;
 	//intialize player
-	Player player;
+	Player player (playerName);
 	player.Pos.x = rand() % 51;
 	player.Pos.y = rand() % 101;
 
-	cout<<"Player enters the arena at [" << player.Pos.x << ", " << player.Pos.y << "].\n";
+	cout<<"Player "<<player.Name<<" enters the arena at [" << player.Pos.x << ", " << player.Pos.y << "].\n";
 	//create monsters
 	mon = new Monster[monNumber];
 	for (int i = 0; i < monNumber;)
@@ -47,9 +47,9 @@ int main()
 		cin >> move;
 		if (move == 'Q' || move == 'q')
 			break;
-		else if (move != 'W' && move != 'S' && move != 'A' && move != 'D')
+		else if (move != 'W' && move != 'S' && move != 'A' && move != 'D' && move != 'w' && move != 'a' && move != 's' && move != 'd')
 		{
-			cout << "Use WASD (not wasd) to move, Q to quit, try to live as long as you can!\n";
+			cout << "Use WASD to move, Q to quit, try to live as long as you can!\n";
 			continue;
 		}
 		else
