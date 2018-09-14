@@ -72,7 +72,7 @@ void Monster::respawn(char * monName, int & monCount)
 	if (NULL != Name)
 		delete Name;
 	Name = new char[strlen(monName) + 2 + monCount / 26]; //Name after xxxA, xxxB ... xxxZ, xxxAA
-	for (int i = 0; i < strlen(monName); ++i)
+	for (unsigned int i = 0; i < strlen(monName); ++i)
 	{
 		Name[i] = monName[i];
 	}

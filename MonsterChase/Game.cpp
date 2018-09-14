@@ -1,8 +1,9 @@
 #include<iostream>
 #include<stdlib.h> //random
+#include<crtdbg.h>
 #include "Monster.h"
 #include "Player.h"
-
+#include "Engine.h"
 
 using namespace std;
 int main()
@@ -16,6 +17,7 @@ int main()
 	char playerName[50], monName[50];
 
 	//startup
+	Engine::initialize();
 	cout << "Enter number of monsters to start: \n";
 	cin >> monNumber;
 	cout << "Enter the name of monster:\n";
@@ -83,5 +85,6 @@ int main()
 	}
 
 	std::cout << "Game Over.\n";
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
