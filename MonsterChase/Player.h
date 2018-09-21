@@ -1,13 +1,14 @@
 #pragma once
-#include "Utility.h"
+#include "Point2D.cpp"
+using namespace Engine;
 class Player
 {
 public:
 	int Lives;
-	Position Pos;
+	Point2D<int> Pos;
 	char * Name;
 
-	Player(Position pos, int lives = 3);
+	Player(const Point2D<int> & pos, int lives = 3);
 	Player(char * name);
 	
 	~Player();

@@ -6,10 +6,10 @@ Monster::Monster()
 	Name = NULL;
 }
 
-Monster::Monster(char * name, Position pos, int lives = 20)
+Monster::Monster(char * name, Point2D<int> pos, int lives = 20)
 {
-	Name = new char[strlen(name)];
-	memcpy(Name, name, strlen(name));
+	Name = new char[strlen(name)+1];
+	memcpy(Name, name, strlen(name)+1);
 	Pos = pos;
 	Lives = lives;
 }
@@ -22,36 +22,37 @@ Monster::~Monster()
 
 
 //True means that player was caught
-bool Monster::Move(Position & playerPos, int & monCount, char * monName)
+bool Monster::Move(Point2D<int> & playerPos, int & monCount, char * monName)
 {
-	int distanceX = playerPos.x - Pos.x;
-	int distanceY = playerPos.y - Pos.y;
+	int distanceX = playerPos.getX() - Pos.getX();
+	int distanceY = playerPos.getY() - Pos.getY();
 
 	
 	if (abs(distanceX) >= abs(distanceY))
 	{
 		if (distanceX < 0)
-			Pos.x--;
+			Pos.setX(Pos.getX() - 1);
 		else
-			Pos.x++;
+			Pos.setX(Pos.getX() + 1);
+
 	}
 	else
 	{
 		if (distanceY < 0)
-			Pos.y--;
+			Pos.setY(Pos.getY() - 1);
 		else
-			Pos.y++;
+			Pos.setY(Pos.getY() + 1);
 	}
-	std::cout << "To approach player, Monster named " << Name << " moves to [" << Pos.x << ", " << Pos.y << "].\n";
+	std::cout << "To approach player, Monster named " << Name << " moves to [" << Pos.getX() << ", " << Pos.getY() << "].\n";
 
 	if (playerPos == Pos)
 	{
-		std::cout << "Monster named " << Name << "catches player at [" << Pos.x << ", " << Pos.y << "].\n" <<
+		std::cout << "Monster named " << Name << "catches player at [" << Pos.getX() << ", " << Pos.getY() << "].\n" <<
 			"However player fights valiantly and kills it, player HP - 1.\n";
 
 		respawn(monName, monCount);
 
-		std::cout << "To avenge its friend another monster named " << Name << " appears at [" << Pos.x << ", " << Pos.y << "].\n";
+		std::cout << "To avenge its friend another monster named " << Name << " appears at [" << Pos.getX() << ", " << Pos.getY() << "].\n";
 		return true;
 	}
 
@@ -59,7 +60,7 @@ bool Monster::Move(Position & playerPos, int & monCount, char * monName)
 	{
 		std::cout << "After 20 moves and " << Name << " exhausted and died.\n";
 		respawn(monName, monCount);
-		std::cout << "In the meanwhile a monster named " << Name << " appears at [" << Pos.x << ", " << Pos.y << "].\n";
+		std::cout << "In the meanwhile a monster named " << Name << " appears at [" << Pos.getX() << ", " << Pos.getY() << "].\n";
 	}
 
 	return false;
@@ -88,8 +89,8 @@ void Monster::respawn(char * monName, int & monCount)
 	}
 	Name[strlen(monName) + 1 + monCount / 26] = '\0';
 	monCount++;
-	Pos.x = rand() % 40 + 50;
-	Pos.y = rand() % 101;
+	Pos.setX(rand() % 40 + 50);
+	Pos.setY(rand() % 101);
 	Lives = 20;
 }
 

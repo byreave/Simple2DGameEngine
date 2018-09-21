@@ -136,7 +136,6 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utility.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>

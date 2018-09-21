@@ -3,7 +3,7 @@
 #include<crtdbg.h>
 #include "Monster.h"
 #include "Player.h"
-#include "Engine.h"
+#include "Vector.cpp"
 
 using namespace std;
 int main()
@@ -14,10 +14,11 @@ int main()
 	int monCount = 0; //For naming
 	char move;
 	Monster * mon;
+	Vector<Monster *> * monVec;
 	char playerName[50], monName[50];
 
 	//startup
-	Engine::initialize();
+	srand(123);
 	cout << "Enter number of monsters to start: \n";
 	cin >> monNumber;
 	cout << "Enter the name of monster:\n";
@@ -26,19 +27,27 @@ int main()
 	cin >> playerName;
 	monCount = monNumber;
 	//intialize player
-	Player player (playerName);
-	player.Pos.x = rand() % 51;
-	player.Pos.y = rand() % 101;
+	Player *player = new Player(playerName);
+	player->Pos.setX(rand() % 51);
+	player->Pos.setY(rand() % 101);
 
-	cout<<"Player "<<player.Name<<" enters the arena at [" << player.Pos.x << ", " << player.Pos.y << "].\n";
+	cout<<"Player "<<player->Name<<" enters the arena at [" << player->Pos.getX() << ", " << player->Pos.getY() << "].\n";
 	//create monsters
-	mon = new Monster[monNumber];
+	monVec = new Vector<Monster *>();
 	for (int i = 0; i < monNumber;)
 	{
-		mon[i].respawn(monName, i);
-		cout << i << endl;
-		std::cout << "To catch player, Monster named " << mon[i-1].Name << " appears at [" << mon[i-1].Pos.x << ", " << mon[i-1].Pos.y << "].\n";
+		mon = new Monster();
+		mon->respawn(monName, i);
+		monVec->push(mon);
 	}
+	mon = nullptr;
+	//mon = new Monster[monNumber];
+	//for (int i = 0; i < monNumber;)
+	//{
+	//	mon[i].respawn(monName, i);
+	//	cout << i << endl;
+	//	std::cout << "To catch player, Monster named " << mon[i - 1].Name << " appears at [" << mon[i - 1].Pos.getX() << ", " << mon[i - 1].Pos.getY() << "].\n";
+	//}
 
 	cout << "OK, Battle begins.\n" <<
 		"Use WASD to move, Q to quit, try to live as long as you can!\n";
@@ -56,27 +65,27 @@ int main()
 		}
 		else
 		{
-			player.Move(move);
+			player->Move(move);
 			//suicide
 			for (int i = 0; i < monNumber; ++i)
 			{
-				if (player.Pos == mon[i].Pos)
+				if (player->Pos == (*monVec)[i]->Pos)
 				{
-					cout << playerName << "'s head hit right on a monster named " << mon[i].Name << ".\n";
-					if (--player.Lives > 0)
+					cout << playerName << "'s head hit right on a monster named " << (*monVec)[i]->Name << ".\n";
+					if (--player->Lives > 0)
 					{
-						cout << playerName << "'s head is so hard that " << mon[i].Name << " ends up dead.\n";
-						mon[i].respawn(monName, monCount);
-						cout << "However, to avenge its friend another monster named " << mon[i].Name << " appears at[" << mon[i].Pos.x << ", " << mon[i].Pos.y << "].\n";
+						cout << playerName << "'s head is so hard that " << (*monVec)[i]->Name << " ends up dead.\n";
+						(*monVec)[i]->respawn(monName, monCount);
+						cout << "However, to avenge its friend another monster named " << (*monVec)[i]->Name << " appears at[" << (*monVec)[i]->Pos.getX() << ", " << (*monVec)[i]->Pos.getY() << "].\n";
 					}
 					break;
 				}
 			}
 			for (int i = 0; i < monNumber; ++i)
 			{
-				mon[i].Move(player.Pos, monCount, monName);
+				(*monVec)[i]->Move(player->Pos, monCount, monName);
 			}
-			if (player.Lives <= 0)
+			if (player->Lives <= 0)
 			{
 				cout << playerName << " Suffered an unfortunate fate and died.\n";
 				break;
@@ -85,6 +94,9 @@ int main()
 	}
 
 	std::cout << "Game Over.\n";
+	delete player;
+	//monVec->clear();
+	delete monVec;
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
