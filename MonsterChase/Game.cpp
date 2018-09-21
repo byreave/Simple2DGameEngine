@@ -3,7 +3,7 @@
 #include<crtdbg.h>
 #include "Monster.h"
 #include "Player.h"
-#include "Vector.cpp"
+#include "Vector.cpp" //linked error
 
 using namespace std;
 int main()

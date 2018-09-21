@@ -85,6 +85,7 @@ template<typename T>
 bool Engine::Vector<T>::removeAt(const unsigned int index)
 {
 	Node<T> * cur = head;
+	int tmpInd = index;
 	if (index == 0)
 	{
 		head = cur->next();
@@ -93,7 +94,7 @@ bool Engine::Vector<T>::removeAt(const unsigned int index)
 		delete cur;
 		cur = nullptr;
 	}
-	while (index-- > 1)
+	while (tmpInd-- > 1)
 	{
 		assert(cur != nullptr);
 		cur = cur->next();
@@ -107,3 +108,5 @@ bool Engine::Vector<T>::removeAt(const unsigned int index)
 	cur->next() = nullptr;
 	return false;
 }
+
+//template class Engine::Vector<int>;

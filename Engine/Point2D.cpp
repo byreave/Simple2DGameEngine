@@ -45,4 +45,5 @@ namespace Engine {
 		return *this;
 	}
 
+	//template class Point2D<int>;
 }
