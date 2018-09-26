@@ -1,10 +1,13 @@
 #include<iostream>
 #include<stdlib.h> //random
-#include<crtdbg.h>
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#endif // _DEBUG
 #include "Monster.h"
 #include "Player.h"
 #include "Vector.cpp" //linked error
-
+#include "ConsoleLog.h"
 using namespace std;
 int main()
 {
@@ -41,6 +44,7 @@ int main()
 	{
 		mon = new Monster();
 		mon->respawn(monName, i);
+		DEBUG_PRINT("Event", "Generated a monster named %s", mon->Name);
 		monVec->push(mon);
 	}
 	mon = nullptr;
@@ -79,6 +83,8 @@ int main()
 					{
 						cout << playerName << "'s head is so hard that " << (*monVec)[i]->Name << " ends up dead.\n";
 						(*monVec)[i]->respawn(monName, monCount);
+						DEBUG_PRINT("Event", "A monster named %s repawned.", (*monVec)[i]->Name);
+
 						cout << "However, to avenge its friend another monster named " << (*monVec)[i]->Name << " appears at[" << (*monVec)[i]->Pos.getX() << ", " << (*monVec)[i]->Pos.getY() << "].\n";
 					}
 					break;
