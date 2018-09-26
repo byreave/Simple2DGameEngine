@@ -75,6 +75,7 @@ T & Engine::Vector<T>::operator[](const unsigned int index)
 	unsigned int ind = index;
 	while (ind -- > 0)
 	{
+		//add assert
 		assert(cur != nullptr);
 		cur = cur->next();
 	}
@@ -96,9 +97,11 @@ bool Engine::Vector<T>::removeAt(const unsigned int index)
 	}
 	while (tmpInd-- > 1)
 	{
+		//add assert
 		assert(cur != nullptr);
 		cur = cur->next();
 	}
+	//add assert
 	assert(cur->next() != nullptr);
 	if (cur->next() == tail)
 	{

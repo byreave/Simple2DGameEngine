@@ -23,8 +23,11 @@ int main()
 	cin >> monNumber;
 	cout << "Enter the name of monster:\n";
 	cin >> monName;
+	assert(monName != "");
 	cout << "Enter Player's Name\n";
 	cin >> playerName;
+	assert(playerName != "");
+
 	monCount = monNumber;
 	//intialize player
 	Player *player = new Player(playerName);
@@ -97,6 +100,8 @@ int main()
 	delete player;
 	//monVec->clear();
 	delete monVec;
+#ifdef _DEBUG
 	_CrtDumpMemoryLeaks();
+#endif // DEBUG
 	return 0;
 }
