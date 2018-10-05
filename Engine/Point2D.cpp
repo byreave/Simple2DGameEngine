@@ -1,5 +1,4 @@
 #include "Point2D.h"
-
 namespace Engine {
 	template<typename T>
 	Point2D<T> Point2D<T>::operator+(const Point2D<T>& other)

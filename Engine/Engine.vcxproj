@@ -124,15 +124,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\HeapManagerUnitTest\Externals\HeapManagerProxy.h" />
     <ClInclude Include="ConsoleLog.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="HeapManager.h" />
     <ClInclude Include="Point2D.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\HeapManagerUnitTest\HeapManagerProxy.cpp" />
+    <ClCompile Include="..\..\HeapManagerUnitTest\HeapManager_UnitTest.cpp" />
     <ClCompile Include="ConsoleLog.cpp" />
     <ClCompile Include="Point2D.cpp" />
     <ClCompile Include="Vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
