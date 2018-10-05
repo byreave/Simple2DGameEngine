@@ -8,9 +8,14 @@
 #include "Player.h"
 #include "Vector.cpp" //linked error
 #include "ConsoleLog.h"
+
+extern bool HeapManager_UnitTest();
 using namespace std;
 int main()
 {
+	//Allocation test
+	HeapManager_UnitTest();
+
 	//variables
 	int gridWidth = 100, gridHeight = 100;
 	int monNumber = 0;//number of monsters
