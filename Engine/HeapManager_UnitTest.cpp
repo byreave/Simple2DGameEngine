@@ -28,8 +28,14 @@ bool HeapManager_UnitTest()
 		return false;
 
 
-	void * ptr = alloc(pHeapManager, sizeof(int));
-	ptr = nullptr;
+	void * ptr1 = alloc(pHeapManager, sizeof(int));
+	//ptr1 = nullptr;
+	void * ptr2 = alloc(pHeapManager, sizeof(int));
+	//ptr2 = nullptr;
+	void * ptr3 = alloc(pHeapManager, sizeof(int), 16);
+	//ptr3 = nullptr;
+	void * ptr4 = alloc(pHeapManager, sizeof(int), 16);
+	ptr4 = nullptr;
 #ifdef TEST_SINGLE_LARGE_ALLOCATION
 	// This is a test I wrote to check to see if using the whole block if it was almost consumed by 
 	// an allocation worked. Also helped test my ShowFreeBlocks() and ShowOutstandingAllocations().

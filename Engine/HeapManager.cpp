@@ -23,7 +23,6 @@ HeapManager * HeapManager::create(void * i_pMemory, size_t i_sizeMemory, unsigne
 		tmp->m_sizeBlock = 0;
 		tmp->m_pBlockStartAddr = nullptr;
 	}
-	heapManager->m_FreeBlockListTail = heapManager->m_FreeBlockListHead->next;
 	//last descriptor
 	tmp->next = nullptr;
 	return heapManager;
@@ -62,7 +61,20 @@ void * HeapManager::_alloc(size_t i_size)
 	}
 	else
 	{
-		//not enough descriptors
+		BlockDescriptor * m_FreeBlockListTail = m_FreeBlockListHead, *m_PrevFreeBlockListTail = nullptr;
+		//get last node of free block list
+		while (m_FreeBlockListTail->m_pBlockStartAddr != nullptr && m_FreeBlockListTail != nullptr)
+		{
+			m_PrevFreeBlockListTail = m_FreeBlockListTail;
+			m_FreeBlockListTail = m_FreeBlockListTail->next;
+		}
+		//this is not supposed to happen but.
+		if (m_PrevFreeBlockListTail == nullptr)
+		{
+			//can add console log here
+			return false;
+		}
+		//not enough block descriptor
 		if (m_FreeBlockListTail == nullptr)
 		{
 			m_FreeBlockListHead = nullptr;
@@ -72,6 +84,7 @@ void * HeapManager::_alloc(size_t i_size)
 		{
 			m_FreeBlockListHead = m_FreeBlockListTail;
 			m_FreeBlockListTail = m_FreeBlockListTail->next;
+			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
 			m_FreeBlockListHead->m_pBlockStartAddr = (char *)curFreeBlock->m_pBlockStartAddr + i_size;
 			if (m_FreeBlockListHead->next == curFreeBlock->next) //Tail is the next of head
@@ -84,6 +97,7 @@ void * HeapManager::_alloc(size_t i_size)
 		{
 			prevFreeBlock->next = m_FreeBlockListTail;
 			m_FreeBlockListTail = m_FreeBlockListTail->next;
+			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
 			prevFreeBlock->next->m_pBlockStartAddr = (char *)curFreeBlock->m_pBlockStartAddr + i_size;
 			prevFreeBlock->next->next = curFreeBlock->next;
@@ -116,11 +130,42 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 			break;
 		prevFreeBlock = curFreeBlock;
 		curFreeBlock = curFreeBlock->next;
+		alignOffset = 0;
 	}
-	//to do: add free block for alignment;
-
 	if (curFreeBlock == nullptr)
 		return nullptr;
+	//create a new desc(into free block list) to desc the memory of alignment offset 
+	//and alloc memory at an aligned address
+	//this might cause fragmentation
+	BlockDescriptor * m_FreeBlockListTail = m_FreeBlockListHead, *m_PrevFreeBlockListTail = nullptr;
+	//get last node of free block list
+	while (m_FreeBlockListTail->m_pBlockStartAddr != nullptr && m_FreeBlockListTail != nullptr)
+	{
+		m_PrevFreeBlockListTail = m_FreeBlockListTail;
+		m_FreeBlockListTail = m_FreeBlockListTail->next;
+	}
+	//this is not supposed to happen but.
+	if (m_PrevFreeBlockListTail == nullptr)
+	{
+		//can add console log here
+		return false;
+	}
+	//not enough block descriptor
+	if (m_FreeBlockListTail == nullptr)
+		return nullptr;
+	//set the node for return
+	m_FreeBlockListTail->m_pBlockStartAddr = alignAddr;
+	m_FreeBlockListTail->m_sizeBlock = curFreeBlock->m_sizeBlock - alignOffset;
+	//keep list structure intact
+	m_PrevFreeBlockListTail->next = m_FreeBlockListTail->next;
+	//change current free block size to alignment offset
+	curFreeBlock->m_sizeBlock = alignOffset;
+	//add the node for return at the back of curFreeBlock
+	m_FreeBlockListTail->next = curFreeBlock->next;
+	curFreeBlock->next = m_FreeBlockListTail;
+	//move curFreeBlock to its next so we can alloc as usual
+	prevFreeBlock = curFreeBlock;
+	curFreeBlock = curFreeBlock->next;
 	//exactly the size
 	if (curFreeBlock->m_sizeBlock == i_size)
 	{
@@ -136,6 +181,13 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 	}
 	else
 	{
+		//get a new desc
+		m_FreeBlockListTail = m_FreeBlockListHead, m_PrevFreeBlockListTail = nullptr;
+		while (m_FreeBlockListTail->m_pBlockStartAddr != nullptr && m_FreeBlockListTail != nullptr)
+		{
+			m_PrevFreeBlockListTail = m_FreeBlockListTail;
+			m_FreeBlockListTail = m_FreeBlockListTail->next;
+		}
 		//not enough descriptors
 		if (m_FreeBlockListTail == nullptr)
 		{
@@ -146,6 +198,7 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 		{
 			m_FreeBlockListHead = m_FreeBlockListTail;
 			m_FreeBlockListTail = m_FreeBlockListTail->next;
+			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
 			m_FreeBlockListHead->m_pBlockStartAddr = (char *)curFreeBlock->m_pBlockStartAddr + i_size;
 			if (m_FreeBlockListHead->next == curFreeBlock->next) //Tail is the next of head
@@ -158,6 +211,7 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 		{
 			prevFreeBlock->next = m_FreeBlockListTail;
 			m_FreeBlockListTail = m_FreeBlockListTail->next;
+			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
 			prevFreeBlock->next->m_pBlockStartAddr = (char *)curFreeBlock->m_pBlockStartAddr + i_size;
 			prevFreeBlock->next->next = curFreeBlock->next;

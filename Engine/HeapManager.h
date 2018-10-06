@@ -24,7 +24,6 @@ public:
 
 private:
 	BlockDescriptor * m_FreeBlockListHead;
-	BlockDescriptor * m_FreeBlockListTail;//For efficieny
 	BlockDescriptor * m_OutstandingBlockListHead;
 
 	void * pHeapMemory;
