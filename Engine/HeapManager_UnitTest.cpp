@@ -28,7 +28,7 @@ bool HeapManager_UnitTest()
 		return false;
 
 
-	void * ptr1 = alloc(pHeapManager, sizeof(int));
+	void * ptr1 = alloc(pHeapManager, sizeof(char));
 	//ptr1 = nullptr;
 	void * ptr2 = alloc(pHeapManager, sizeof(int));
 	//ptr2 = nullptr;
