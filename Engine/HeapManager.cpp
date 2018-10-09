@@ -260,10 +260,10 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 #ifdef _DEBUG
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - nNoMansLandSize * 2;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size + nNoMansLandSize * 2;
+			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + alignOffset + i_size + nNoMansLandSize * 2;
 #else
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size;
+			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + alignOffset + i_size;
 #endif // _DEBUG
 
 			if (m_FreeBlockListHead->next == curFreeBlock->next) //Tail is the next of head
