@@ -314,6 +314,19 @@ bool HeapManager::_free(void * i_ptr)
 	}
 	if(curOutstandingDesc == nullptr)
 		return false;
+	//guardbanding
+#ifdef _DEBUG
+	curOutstandingDesc->m_pBlockStartAddr = (unsigned char *)curOutstandingDesc->m_pBlockStartAddr - nNoMansLandSize;
+	curOutstandingDesc->m_sizeBlock += 2 * nNoMansLandSize;
+#endif // _DEBUG
+
+	//for alignment
+	while (*((unsigned char *)curOutstandingDesc->m_pBlockStartAddr - 1) != _bAlignLandFill)
+	{
+		curOutstandingDesc->m_pBlockStartAddr = (unsigned char *)curOutstandingDesc->m_pBlockStartAddr - 1;
+		curOutstandingDesc->m_sizeBlock++;
+	}
+	memset(curOutstandingDesc, _bDeadLandFill, curOutstandingDesc->m_sizeBlock);
 	m_OutstandingBlockListHead = curOutstandingDesc->next;
 	curOutstandingDesc->next = m_FreeBlockListHead;
 	m_FreeBlockListHead = curOutstandingDesc;
