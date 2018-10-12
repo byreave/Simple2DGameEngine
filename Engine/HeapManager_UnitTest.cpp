@@ -9,6 +9,7 @@
 #define SUPPORTS_SHOWFREEBLOCKS
 #define SUPPORTS_SHOWOUTSTANDINGALLOCATIONS
 
+
 bool HeapManager_UnitTest()
 {
 	using namespace HeapManagerProxy;
@@ -28,19 +29,19 @@ bool HeapManager_UnitTest()
 		return false;
 
 
-	void * ptr1 = alloc(pHeapManager, sizeof(char));
-	//ptr1 = nullptr;
-	void * ptr2 = alloc(pHeapManager, sizeof(int));
-	//ptr2 = nullptr;
-	void * ptr3 = alloc(pHeapManager, sizeof(int), 16);
-	//ptr3 = nullptr;
-	void * ptr4 = alloc(pHeapManager, sizeof(int), 16);
-	bool test1 = free(pHeapManager, ptr1);
-	bool test2 = free(pHeapManager, ptr2);
-	bool test3 = free(pHeapManager, ptr3);
-	bool test4 = free(pHeapManager, ptr4);
-
-	ptr4 = nullptr;
+	//void * ptr1 = alloc(pHeapManager, sizeof(char));
+	////ptr1 = nullptr;
+	//void * ptr2 = alloc(pHeapManager, sizeof(int));
+	////ptr2 = nullptr;
+	//void * ptr3 = alloc(pHeapManager, sizeof(int), 16);
+	////ptr3 = nullptr;
+	//void * ptr4 = alloc(pHeapManager, sizeof(int), 16);
+	//bool test1 = free(pHeapManager, ptr1);
+	//bool test2 = free(pHeapManager, ptr2);
+	//bool test3 = free(pHeapManager, ptr3);
+	//bool test4 = free(pHeapManager, ptr4);
+	//Collect(pHeapManager);
+	//ptr4 = nullptr;
 #ifdef TEST_SINGLE_LARGE_ALLOCATION
 	// This is a test I wrote to check to see if using the whole block if it was almost consumed by 
 	// an allocation worked. Also helped test my ShowFreeBlocks() and ShowOutstandingAllocations().
@@ -163,7 +164,6 @@ bool HeapManager_UnitTest()
 
 			numCollects++;
 		}
-
 	} while( 1 );
 
 #if defined(SUPPORTS_SHOWFREEBLOCKS) || defined(SUPPORTS_SHOWOUTSTANDINGALLOCATIONS)

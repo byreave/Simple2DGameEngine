@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "HeapManager.h"
+#define __TRACK_ALLOCATIONS
 
 namespace HeapManagerProxy
 {

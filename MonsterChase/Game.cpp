@@ -14,7 +14,7 @@ using namespace std;
 int main()
 {
 	//Allocation test
-	HeapManager_UnitTest();
+	bool test = HeapManager_UnitTest();
 
 	//variables
 	int gridWidth = 100, gridHeight = 100;
