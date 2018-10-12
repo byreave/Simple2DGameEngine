@@ -35,6 +35,11 @@ bool HeapManager_UnitTest()
 	void * ptr3 = alloc(pHeapManager, sizeof(int), 16);
 	//ptr3 = nullptr;
 	void * ptr4 = alloc(pHeapManager, sizeof(int), 16);
+	bool test1 = free(pHeapManager, ptr1);
+	bool test2 = free(pHeapManager, ptr2);
+	bool test3 = free(pHeapManager, ptr3);
+	bool test4 = free(pHeapManager, ptr4);
+
 	ptr4 = nullptr;
 #ifdef TEST_SINGLE_LARGE_ALLOCATION
 	// This is a test I wrote to check to see if using the whole block if it was almost consumed by 

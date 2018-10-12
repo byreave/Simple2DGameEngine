@@ -307,9 +307,10 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 
 bool HeapManager::_free(void * i_ptr)
 {
-	BlockDescriptor * curOutstandingDesc = m_OutstandingBlockListHead;
-	while (curOutstandingDesc != i_ptr && curOutstandingDesc != nullptr)
+	BlockDescriptor * curOutstandingDesc = m_OutstandingBlockListHead, * prevOutstandingDesc = nullptr;
+	while (curOutstandingDesc->m_pBlockStartAddr != i_ptr && curOutstandingDesc != nullptr)
 	{
+		prevOutstandingDesc = curOutstandingDesc;
 		curOutstandingDesc = curOutstandingDesc->next;
 	}
 	if(curOutstandingDesc == nullptr)
@@ -321,15 +322,27 @@ bool HeapManager::_free(void * i_ptr)
 #endif // _DEBUG
 
 	//for alignment
-	while (*((unsigned char *)curOutstandingDesc->m_pBlockStartAddr - 1) != _bAlignLandFill)
+	while (*((unsigned char *)curOutstandingDesc->m_pBlockStartAddr - 1) == _bAlignLandFill)
 	{
 		curOutstandingDesc->m_pBlockStartAddr = (unsigned char *)curOutstandingDesc->m_pBlockStartAddr - 1;
 		curOutstandingDesc->m_sizeBlock++;
 	}
-	memset(curOutstandingDesc, _bDeadLandFill, curOutstandingDesc->m_sizeBlock);
-	m_OutstandingBlockListHead = curOutstandingDesc->next;
+	//fillvalues
+	memset(curOutstandingDesc->m_pBlockStartAddr, _bDeadLandFill, curOutstandingDesc->m_sizeBlock);
+	//modify list structure;
+	//if it's head
+	if (prevOutstandingDesc == nullptr)
+	{
+		m_OutstandingBlockListHead = m_OutstandingBlockListHead->next;
+	}
+	else
+	{
+		prevOutstandingDesc->next = curOutstandingDesc->next;
+	}
+	//move this desc to free list
 	curOutstandingDesc->next = m_FreeBlockListHead;
 	m_FreeBlockListHead = curOutstandingDesc;
+	
 	return true;
 }
 
