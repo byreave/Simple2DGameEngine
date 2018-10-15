@@ -50,9 +50,9 @@ void * HeapManager::_alloc(size_t i_size)
 	BlockDescriptor * curFreeBlock = m_FreeBlockListHead;
 	BlockDescriptor * prevFreeBlock = nullptr;
 #ifdef _DEBUG
-	while (curFreeBlock->m_sizeBlock < i_size + nNoMansLandSize * 2 && curFreeBlock != nullptr)
+	while (curFreeBlock != nullptr && curFreeBlock->m_sizeBlock < i_size + nNoMansLandSize * 2 )
 #else
-	while (curFreeBlock->m_sizeBlock < i_size && curFreeBlock != nullptr)
+	while (curFreeBlock != nullptr && curFreeBlock->m_sizeBlock < i_size)
 #endif // _DEBUG
 	{
 		prevFreeBlock = curFreeBlock;
@@ -71,7 +71,7 @@ void * HeapManager::_alloc(size_t i_size)
 		//when it is the free block list head
 		if (prevFreeBlock == nullptr)
 		{
-			m_FreeBlockListHead = nullptr;
+			m_FreeBlockListHead = m_FreeBlockListHead->next;
 		}
 		else
 		{
@@ -125,10 +125,10 @@ void * HeapManager::_alloc(size_t i_size)
 			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 #ifdef _DEBUG
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - nNoMansLandSize * 2;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size + nNoMansLandSize * 2;
+			prevFreeBlock->next->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size + nNoMansLandSize * 2;
 #else
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size;
+			prevFreeBlock->next->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size;
 #endif // _DEBUG
 			prevFreeBlock->next->next = curFreeBlock->next;
 		}
@@ -198,7 +198,7 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 		//when it is the free block list head
 		if (prevFreeBlock == nullptr)
 		{
-			m_FreeBlockListHead = nullptr;
+			m_FreeBlockListHead = m_FreeBlockListHead->next;
 		}
 		else
 		{
@@ -283,7 +283,7 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 bool HeapManager::_free(void * i_ptr)
 {
 	BlockDescriptor * curOutstandingDesc = m_OutstandingBlockListHead, * prevOutstandingDesc = nullptr;
-	while (curOutstandingDesc->m_pBlockStartAddr != i_ptr && curOutstandingDesc != nullptr)
+	while (curOutstandingDesc != nullptr && curOutstandingDesc->m_pBlockStartAddr != i_ptr )
 	{
 		prevOutstandingDesc = curOutstandingDesc;
 		curOutstandingDesc = curOutstandingDesc->next;
@@ -339,7 +339,12 @@ bool HeapManager::_free(void * i_ptr)
 
 void HeapManager::collect()
 {
-	BlockDescriptor * curFreeBlockDesc = m_FreeBlockListHead, * nextFreeBlockDesc = m_FreeBlockListHead->next, * tailFreeBlockDesc = m_FreeBlockListHead;
+	BlockDescriptor * curFreeBlockDesc = m_FreeBlockListHead,  * tailFreeBlockDesc = m_FreeBlockListHead;
+	BlockDescriptor *nextFreeBlockDesc;
+	if (m_FreeBlockListHead != nullptr)
+		nextFreeBlockDesc = m_FreeBlockListHead->next;
+	else
+		return;
 	//get the tail for movement
 	while (tailFreeBlockDesc->next != nullptr)
 		tailFreeBlockDesc = tailFreeBlockDesc->next;
