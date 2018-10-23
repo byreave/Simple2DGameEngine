@@ -12,7 +12,7 @@ namespace Engine {
 		Point2D<T>& operator += (const Point2D<T> & other);
 		Point2D<T>& operator -= (const Point2D<T> & other);
 		bool operator == (const Point2D<T> & other);
-		Point2D<T> operator=(const Point2D<T> & other);
+		Point2D<T>& operator=(const Point2D<T> & other);
 
 		void setX(const T & x) { _x = x; }
 		void setY(const T & y) { _y = y; }

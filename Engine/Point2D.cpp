@@ -37,7 +37,7 @@ namespace Engine {
 	}
 
 	template<typename T>
-	Point2D<T> Point2D<T>::operator=(const Point2D<T>& other)
+	Point2D<T>& Point2D<T>::operator=(const Point2D<T>& other)
 	{
 		_x = other._x;
 		_y = other._y;
