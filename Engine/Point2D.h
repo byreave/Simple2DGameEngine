@@ -11,17 +11,19 @@ namespace Engine {
 		Point2D<T> operator - (const Point2D<T> & other);
 		Point2D<T>& operator += (const Point2D<T> & other);
 		Point2D<T>& operator -= (const Point2D<T> & other);
-		bool operator == (const Point2D<T> & other);
-		Point2D<T>& operator=(const Point2D<T> & other);
+		inline bool operator == (const Point2D<T> & other);
+		Point2D<T>& operator = (const Point2D<T> & other);
 
-		void setX(const T & x) { _x = x; }
-		void setY(const T & y) { _y = y; }
+		inline void setX(const T & x) { _x = x; }
+		inline void setY(const T & y) { _y = y; }
 
-		const T& getX() { return _x; }
-		const T& getY() { return _y; }
+		inline const T& getX() { return _x; }
+		inline const T& getY() { return _y; }
 	private:
 		T _x;
 		T _y;
 	};
 }
+
+#include "Point2D-inl.h"
 
