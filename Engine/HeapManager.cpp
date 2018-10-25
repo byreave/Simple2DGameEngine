@@ -26,7 +26,7 @@ HeapManager * HeapManager::create(void * i_pMemory, size_t i_sizeMemory, unsigne
 	heapManager->m_FreeBlockListHead->m_sizeBlock = i_sizeMemory - i_numDescriptors * sizeof(BlockDescriptor) - sizeof(HeapManager);
 	heapManager->m_OutstandingBlockListHead = nullptr;
 	BlockDescriptor * tmp = heapManager->m_FreeBlockListHead;
-	for (int i = 0; i < i_numDescriptors-1; i++)
+	for (unsigned int i = 0; i < i_numDescriptors-1; i++)
 	{
 		tmp->next = tmp + 1;
 		tmp = tmp->next;
@@ -432,7 +432,7 @@ void HeapManager::ShowFreeBlocks() const
 	unsigned int count = 0;
 	while (curFreeBlockDesc != nullptr && curFreeBlockDesc->m_pBlockStartAddr != nullptr)
 	{
-		printf("Free Block %d: Start Address: %p, Size: %d \n", count++, curFreeBlockDesc->m_pBlockStartAddr, curFreeBlockDesc->m_sizeBlock);
+		printf("Free Block %d: Start Address: %p, Size: %zd \n", count++, curFreeBlockDesc->m_pBlockStartAddr, curFreeBlockDesc->m_sizeBlock);
 		curFreeBlockDesc = curFreeBlockDesc->next;
 	}
 }
@@ -443,7 +443,7 @@ void HeapManager::ShowOutstandingAllocations() const
 	unsigned int count = 0;
 	while (curOutstandingDesc != nullptr)
 	{
-		printf("Outstanding Block %d: Start Address: %p, Size: %d \n", count++, curOutstandingDesc->m_pBlockStartAddr, curOutstandingDesc->m_sizeBlock);
+		printf("Outstanding Block %d: Start Address: %p, Size: %zd \n", count++, curOutstandingDesc->m_pBlockStartAddr, curOutstandingDesc->m_sizeBlock);
 		curOutstandingDesc = curOutstandingDesc->next;
 	}
 }
