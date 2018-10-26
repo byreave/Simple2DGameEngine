@@ -6,7 +6,7 @@
 #endif // _DEBUG
 #include "Monster.h"
 #include "Player.h"
-#include "Vector.cpp" //linked error
+#include "Vector.h" //linked error
 #include "ConsoleLog.h"
 
 extern bool HeapManager_UnitTest();

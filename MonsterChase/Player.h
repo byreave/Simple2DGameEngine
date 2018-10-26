@@ -1,5 +1,5 @@
 #pragma once
-#include "Point2D.cpp" //linked error
+#include "Point2D.h" //linked error
 using namespace Engine;
 class Player
 {
