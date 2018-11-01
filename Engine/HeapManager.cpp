@@ -13,15 +13,15 @@ static unsigned char _bCleanLandFill = 0xCD; /* fill new objects with this */
 
 HeapManager * HeapManager::create(void * i_pMemory, size_t i_sizeMemory, unsigned int i_numDescriptors)
 {
-	void * endOfHeap = (unsigned char *)i_pMemory + i_sizeMemory;
-	void * startOfDescriptors = (unsigned char *)endOfHeap - i_numDescriptors * sizeof(BlockDescriptor);
+	void * endOfHeap = static_cast<unsigned char *>(i_pMemory) + i_sizeMemory;
+	void * startOfDescriptors = static_cast<unsigned char *>(endOfHeap) - i_numDescriptors * sizeof(BlockDescriptor);
 	//Put heapmanager before descriptors
-	HeapManager * heapManager = (HeapManager *)((unsigned char *)startOfDescriptors - sizeof(HeapManager));
+	HeapManager * heapManager = reinterpret_cast<HeapManager *>(static_cast<unsigned char *>(startOfDescriptors) - sizeof(HeapManager));
 	heapManager->pHeapMemory = i_pMemory;
 	heapManager->numDescritors = i_numDescriptors;
 	heapManager->sizeHeap = i_sizeMemory;
 	//intialize all free block descriptors in successive order
-	heapManager->m_FreeBlockListHead = (BlockDescriptor *)startOfDescriptors;
+	heapManager->m_FreeBlockListHead = static_cast<BlockDescriptor *>(startOfDescriptors);
 	heapManager->m_FreeBlockListHead->m_pBlockStartAddr = i_pMemory;
 	heapManager->m_FreeBlockListHead->m_sizeBlock = i_sizeMemory - i_numDescriptors * sizeof(BlockDescriptor) - sizeof(HeapManager);
 	heapManager->m_OutstandingBlockListHead = nullptr;
@@ -106,10 +106,10 @@ void * HeapManager::_alloc(size_t i_size)
 			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 #ifdef _DEBUG
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - nNoMansLandSize * 2;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size + nNoMansLandSize * 2;
+			m_FreeBlockListHead->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + i_size + nNoMansLandSize * 2;
 #else
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size;
+			m_FreeBlockListHead->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + i_size;
 #endif // _DEBUG
 
 			if (m_FreeBlockListHead->next == curFreeBlock->next) //Tail is the next of head
@@ -125,10 +125,10 @@ void * HeapManager::_alloc(size_t i_size)
 			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 #ifdef _DEBUG
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - nNoMansLandSize * 2;
-			prevFreeBlock->next->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size + nNoMansLandSize * 2;
+			prevFreeBlock->next->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + i_size + nNoMansLandSize * 2;
 #else
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size;
-			prevFreeBlock->next->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + i_size;
+			prevFreeBlock->next->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + i_size;
 #endif // _DEBUG
 			prevFreeBlock->next->next = curFreeBlock->next;
 		}
@@ -138,8 +138,8 @@ void * HeapManager::_alloc(size_t i_size)
 #ifdef _DEBUG
 	//guardbanding
 	memset(curFreeBlock->m_pBlockStartAddr, _bNoMansLandFill, nNoMansLandSize);
-	curFreeBlock->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + nNoMansLandSize;
-	memset((unsigned char *)curFreeBlock->m_pBlockStartAddr + curFreeBlock->m_sizeBlock, _bNoMansLandFill, nNoMansLandSize);
+	curFreeBlock->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + nNoMansLandSize;
+	memset(static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + curFreeBlock->m_sizeBlock, _bNoMansLandFill, nNoMansLandSize);
 #endif // _DEBUG
 	//fillvalues
 	memset(curFreeBlock->m_pBlockStartAddr, _bCleanLandFill, curFreeBlock->m_sizeBlock);
@@ -167,14 +167,14 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 			alignOffset = 0;
 			continue;
 		}
-		alignAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + nNoMansLandSize;
+		alignAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + nNoMansLandSize;
 #else
 		alignAddr = curFreeBlock->m_pBlockStartAddr;
 #endif // _DEBUG
 
 		while ((reinterpret_cast<uintptr_t>(alignAddr) & (i_alignment - 1)) != 0)
 		{
-			alignAddr = (unsigned char *)alignAddr + 1;
+			alignAddr = static_cast<unsigned char *>(alignAddr) + 1;
 			alignOffset++;
 		}
 #ifdef _DEBUG
@@ -231,10 +231,10 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 #ifdef _DEBUG
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - nNoMansLandSize * 2 - alignOffset;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + alignOffset + i_size + nNoMansLandSize * 2;
+			m_FreeBlockListHead->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + alignOffset + i_size + nNoMansLandSize * 2;
 #else
 			m_FreeBlockListHead->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - alignOffset;
-			m_FreeBlockListHead->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + alignOffset + i_size;
+			m_FreeBlockListHead->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + alignOffset + i_size;
 #endif // _DEBUG
 
 			if (m_FreeBlockListHead->next == curFreeBlock->next) //Tail is the next of head
@@ -250,10 +250,10 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 			m_PrevFreeBlockListTail->next = m_FreeBlockListTail;
 #ifdef _DEBUG
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - nNoMansLandSize * 2 - alignOffset;
-			prevFreeBlock->next->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + alignOffset + i_size + nNoMansLandSize * 2;
+			prevFreeBlock->next->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + alignOffset + i_size + nNoMansLandSize * 2;
 #else
 			prevFreeBlock->next->m_sizeBlock = curFreeBlock->m_sizeBlock - i_size - alignOffset;
-			prevFreeBlock->next->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + alignOffset + i_size;
+			prevFreeBlock->next->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + alignOffset + i_size;
 #endif // _DEBUG
 			prevFreeBlock->next->next = curFreeBlock->next;
 		}
@@ -263,16 +263,16 @@ void * HeapManager::_alloc(size_t i_size, size_t i_alignment)
 	memset(curFreeBlock->m_pBlockStartAddr, _bAlignLandFill, alignOffset);
 	//move start addr
 #ifdef _DEBUG
-	curFreeBlock->m_pBlockStartAddr = (unsigned char *)alignAddr - nNoMansLandSize;
+	curFreeBlock->m_pBlockStartAddr = static_cast<unsigned char *>(alignAddr) - nNoMansLandSize;
 #else
-	curFreeBlock->m_pBlockStartAddr = (unsigned char *)alignAddr;
+	curFreeBlock->m_pBlockStartAddr = static_cast<unsigned char *>(alignAddr);
 #endif
 	curFreeBlock->m_sizeBlock = i_size;
 #ifdef _DEBUG
 	//guardbanding
 	memset(curFreeBlock->m_pBlockStartAddr, _bNoMansLandFill, nNoMansLandSize);
-	curFreeBlock->m_pBlockStartAddr = (unsigned char *)curFreeBlock->m_pBlockStartAddr + nNoMansLandSize;
-	memset((unsigned char *)curFreeBlock->m_pBlockStartAddr + curFreeBlock->m_sizeBlock, _bNoMansLandFill, nNoMansLandSize);
+	curFreeBlock->m_pBlockStartAddr = static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + nNoMansLandSize;
+	memset(static_cast<unsigned char *>(curFreeBlock->m_pBlockStartAddr) + curFreeBlock->m_sizeBlock, _bNoMansLandFill, nNoMansLandSize);
 #endif // _DEBUG
 	//fillvalues
 	memset(curFreeBlock->m_pBlockStartAddr, _bCleanLandFill, curFreeBlock->m_sizeBlock);
@@ -292,14 +292,14 @@ bool HeapManager::_free(void * i_ptr)
 		return false;
 	//guardbanding
 #ifdef _DEBUG
-	curOutstandingDesc->m_pBlockStartAddr = (unsigned char *)curOutstandingDesc->m_pBlockStartAddr - nNoMansLandSize;
+	curOutstandingDesc->m_pBlockStartAddr = static_cast<unsigned char *>(curOutstandingDesc->m_pBlockStartAddr) - nNoMansLandSize;
 	curOutstandingDesc->m_sizeBlock += 2 * nNoMansLandSize;
 #endif // _DEBUG
 
 	//for alignment
-	while (*((unsigned char *)curOutstandingDesc->m_pBlockStartAddr - 1) == _bAlignLandFill)
+	while (*(static_cast<unsigned char *>(curOutstandingDesc->m_pBlockStartAddr) - 1) == _bAlignLandFill)
 	{
-		curOutstandingDesc->m_pBlockStartAddr = (unsigned char *)curOutstandingDesc->m_pBlockStartAddr - 1;
+		curOutstandingDesc->m_pBlockStartAddr = static_cast<unsigned char *>(curOutstandingDesc->m_pBlockStartAddr) - 1;
 		curOutstandingDesc->m_sizeBlock++;
 	}
 	//fillvalues
@@ -351,7 +351,7 @@ void HeapManager::collect()
 	while (nextFreeBlockDesc != nullptr && nextFreeBlockDesc->m_pBlockStartAddr != nullptr)
 	{
 		//if two block can be combined. We can do this because free list is stored in their block start address order
-		if ((unsigned char *)curFreeBlockDesc->m_pBlockStartAddr + curFreeBlockDesc->m_sizeBlock == nextFreeBlockDesc->m_pBlockStartAddr)
+		if (static_cast<unsigned char *>(curFreeBlockDesc->m_pBlockStartAddr) + curFreeBlockDesc->m_sizeBlock == nextFreeBlockDesc->m_pBlockStartAddr)
 		{
 			//add up numbers
 			curFreeBlockDesc->m_sizeBlock += nextFreeBlockDesc->m_sizeBlock;
@@ -373,8 +373,8 @@ void HeapManager::collect()
 
 bool HeapManager::Contains(void * i_ptr) const
 {
-	void * endOfHeap = (unsigned char *)pHeapMemory + sizeHeap;
-	void * startOfDescriptors = (unsigned char *)endOfHeap - numDescritors * sizeof(BlockDescriptor);
+	void * endOfHeap = static_cast<unsigned char *>(pHeapMemory) + sizeHeap;
+	void * startOfDescriptors = static_cast<unsigned char *>(endOfHeap) - numDescritors * sizeof(BlockDescriptor);
 	BlockDescriptor * curBlockDesc = (BlockDescriptor *)startOfDescriptors;
 	for (unsigned int i = 0; i < numDescritors; ++i)
 	{
