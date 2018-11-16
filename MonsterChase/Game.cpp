@@ -6,7 +6,7 @@
 #endif // _DEBUG
 #include "Monster.h"
 #include "Player.h"
-#include "Vector.h" //linked error
+#include "Vector.h"
 #include "ConsoleLog.h"
 
 extern bool HeapManager_UnitTest();
@@ -23,7 +23,7 @@ int main()
 	char move;
 	Monster * mon;
 	Vector<Monster *> * monVec;
-	char playerName[50], monName[50];
+	char playerName[128], monName[128];
 
 	//startup
 	srand(123);
