@@ -7,7 +7,7 @@ class Actor
 public:
 	Actor() {
 	}
-	Actor(char * name, int lives, const Point2D<int> & pos) :
+	Actor(const char * name, int lives, const Point2D<int> & pos) :
 		m_lives(lives), m_pos(pos)
 	{
 		m_name = new char[strlen(name) + 1];
@@ -16,9 +16,11 @@ public:
 	~Actor();
 
 	const char * GetName() const;
+	void SetName(const char * newName);
 	const int GetLives() const { return m_lives; }
 	const Point2D<int> GetPosition() const;
 	void SetPosition(const Point2D<int> & pos) { m_pos = pos; }
+	void SetPosition(int x, int y) { m_pos.setX(x); m_pos.setY(y); }
 	void SetLives(int lives) { m_lives = lives; }
 	
 protected:

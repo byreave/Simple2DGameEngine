@@ -1,18 +1,15 @@
 #pragma once
-#include "Point2D.h" //linked error
+#include "Point2D.h"
+#include "Actor.h"
 using namespace Engine;
-class Player
+class Player : public Actor
 {
 public:
-	int Lives;
-	Point2D<int> Pos;
-	char * Name;
-
 	Player(const Point2D<int> & pos, int lives = 3);
 	Player(char * name);
 	
+	bool ReduceHP();
 	~Player();
 
-	void Move(char direction);
 };
 

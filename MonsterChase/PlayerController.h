@@ -6,17 +6,12 @@ class PlayerController :
 {
 public:
 	void SetActor(Actor * i_pActor) override { m_Actor = i_pActor; }
-	void UpdateActor() override
-	{
-		if (m_Actor)
-		{
-			Point2D<int> Movement = GetMoveFromUserInput();
-			m_Actor->SetPosition(m_Actor->GetPosition() + Movement);
-		}
-	}
+	void UpdateActor() override;
+	
 
 	Point2D<int> GetMoveFromUserInput();
 	void SetMove(char move) { m_move = move; }
+	~PlayerController();
 	
 private:
 	Actor * m_Actor;
