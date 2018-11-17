@@ -119,10 +119,10 @@ int main()
 	}
 
 	std::cout << "Game Over.\n";
-	//delete player;
+	delete player;
 	delete playerCon;
 	//monVec->clear();
-	//delete monVec;
+	delete monVec;
 	delete monConVec;
 #ifdef _DEBUG
 	_CrtDumpMemoryLeaks();

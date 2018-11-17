@@ -85,9 +85,4 @@ Point2D<int> PlayerController::GetMoveFromUserInput()
 
 PlayerController::~PlayerController()
 {
-	if (m_Actor != nullptr)
-	{
-		delete m_Actor;
-		m_Actor = nullptr;
-	}
 }

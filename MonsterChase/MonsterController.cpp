@@ -3,16 +3,7 @@
 int MonsterController::MonsterID = 0;
 MonsterController::~MonsterController()
 {
-	if (m_Actor != NULL)
-	{
-		delete m_Actor;
-		m_Actor = nullptr;
-	}
-	if (m_Target != nullptr)
-	{
-		delete m_Target;
-		m_Target = nullptr;
-	}
+	
 }
 
 //True means that player was caught
