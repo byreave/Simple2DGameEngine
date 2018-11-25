@@ -4,20 +4,43 @@
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #endif // _DEBUG
+#include <Windows.h>//Heap
 #include "Monster.h"
 #include "Player.h"
 #include "PlayerController.h"
 #include "MonsterController.h"
 #include "Vector.h"
 #include "ConsoleLog.h"
+#include "HeapManagerProxy.h"
+
 
 extern bool HeapManager_UnitTest();
+void * operator new(size_t i_size, HeapManager * pHeapManager)
+{
+	DEBUG_PRINT("MSG", "CALLED NEW NEW!");
+	if (pHeapManager != nullptr)
+	{
+		return HeapManagerProxy::alloc(pHeapManager, i_size);
+	}
+	return nullptr;
+}
+
+void operator delete(void * ptr, HeapManager * pHeapManager)
+{
+	DEBUG_PRINT("MSG", "CALLED NEW DELETE!");
+
+	if (pHeapManager != nullptr)
+	{
+		HeapManagerProxy::free(pHeapManager, ptr);
+	}
+}
 using namespace std;
 int main()
 {
+	using namespace HeapManagerProxy;
 	//Allocation test
 	//bool test = HeapManager_UnitTest();
-
+	
 	//variables
 	int gridWidth = 100, gridHeight = 100;
 	int monNumber = 0;//number of monsters
@@ -28,7 +51,20 @@ int main()
 	Vector<Monster *> * monVec;
 	Vector<MonsterController *> * monConVec;
 	char playerName[128], monName[128];
+	//Create Heap
+	const size_t 		sizeHeap = 1024 * 1024;
+	const unsigned int 	numDescriptors = 2048;
 
+	// Allocate memory for my test heap.
+	void * pHeapMemory = HeapAlloc(GetProcessHeap(), 0, sizeHeap);
+	assert(pHeapMemory);
+
+	// Create a heap manager for my test heap.
+	HeapManager * pHeapManager = CreateHeapManager(pHeapMemory, sizeHeap, numDescriptors);
+	assert(pHeapManager);
+
+	if (pHeapManager == nullptr)
+		return false;
 	//startup
 	srand(123);
 	cout << "Enter number of monsters to start: \n";
@@ -42,7 +78,7 @@ int main()
 	assert(playerName != "");
 
 	//intialize player
-	Player *player = new Player(playerName);
+	Player *player = new (pHeapManager) Player(playerName);
 	player->SetPosition(rand() % 51, rand() % 101);
 	PlayerController * playerCon = new PlayerController();
 	playerCon->SetActor(player);
@@ -119,11 +155,18 @@ int main()
 	}
 
 	std::cout << "Game Over.\n";
-	delete player;
+	player->~Player();
+	::operator delete(player, pHeapManager);
+	//delete player;
 	delete playerCon;
 	//monVec->clear();
 	delete monVec;
 	delete monConVec;
+	//Destroy Heap
+	Destroy(pHeapManager);
+	pHeapManager = nullptr;
+
+	HeapFree(GetProcessHeap(), 0, pHeapMemory);
 #ifdef _DEBUG
 	_CrtDumpMemoryLeaks();
 #endif // DEBUG

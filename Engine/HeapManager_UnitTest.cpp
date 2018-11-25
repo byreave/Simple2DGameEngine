@@ -20,7 +20,7 @@ bool HeapManager_UnitTest()
 	// Allocate memory for my test heap.
 	void * pHeapMemory = HeapAlloc(GetProcessHeap(), 0, sizeHeap);
 	assert(pHeapMemory);
-
+	
 	// Create a heap manager for my test heap.
 	HeapManager * pHeapManager = CreateHeapManager(pHeapMemory, sizeHeap, numDescriptors);
 	assert(pHeapManager);

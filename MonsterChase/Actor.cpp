@@ -1,9 +1,10 @@
 #include "Actor.h"
-
+#include <iostream>
 Actor::~Actor()
 {
 	if (m_name != nullptr)
 	{
+		std::cout << "CALLED ACTOR DESTRUCTOR!\n";
 		delete m_name;
 		m_name = nullptr;
 	}

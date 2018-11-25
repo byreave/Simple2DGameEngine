@@ -1,9 +1,6 @@
 #include "Player.h"
 #include <iostream>
 
-
-
-
 Player::Player(const Point2D<int> & pos, int lives)
 {
 	m_pos = pos;
@@ -26,4 +23,5 @@ bool Player::ReduceHP()
 
 Player::~Player()
 {
+	std::cout << "CALLED PLAYER DESTRUCTOR!!!\n";
 }
