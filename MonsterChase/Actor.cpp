@@ -5,7 +5,7 @@ Actor::~Actor()
 	if (m_name != nullptr)
 	{
 		std::cout << "CALLED ACTOR DESTRUCTOR!\n";
-		delete m_name;
+		::operator delete(m_name);
 		m_name = nullptr;
 	}
 }
@@ -18,7 +18,7 @@ const char * Actor::GetName() const
 void Actor::SetName(const char * newName)
 {
 	if (m_name != nullptr)
-		delete m_name;
+		::operator delete(m_name);
 	m_name = new char[strlen(newName)+1];
 	memcpy(m_name, newName, strlen(newName) + 1);
 }

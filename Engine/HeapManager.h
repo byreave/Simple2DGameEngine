@@ -21,7 +21,7 @@ public:
 	void ShowFreeBlocks() const;
 	void ShowOutstandingAllocations() const;
 
-
+	static HeapManager * pHeapManager;
 private:
 	BlockDescriptor * m_FreeBlockListHead;
 	BlockDescriptor * m_OutstandingBlockListHead;

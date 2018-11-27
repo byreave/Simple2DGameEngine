@@ -9,35 +9,18 @@
 #include "Player.h"
 #include "PlayerController.h"
 #include "MonsterController.h"
+#include "OverridenNewAndDelete.h"
 #include "Vector.h"
 #include "ConsoleLog.h"
-#include "HeapManagerProxy.h"
 
 
 extern bool HeapManager_UnitTest();
-void * operator new(size_t i_size, HeapManager * pHeapManager)
-{
-	DEBUG_PRINT("MSG", "CALLED NEW NEW!");
-	if (pHeapManager != nullptr)
-	{
-		return HeapManagerProxy::alloc(pHeapManager, i_size);
-	}
-	return nullptr;
-}
 
-void operator delete(void * ptr, HeapManager * pHeapManager)
-{
-	DEBUG_PRINT("MSG", "CALLED NEW DELETE!");
-
-	if (pHeapManager != nullptr)
-	{
-		HeapManagerProxy::free(pHeapManager, ptr);
-	}
-}
 using namespace std;
+
+
 int main()
 {
-	using namespace HeapManagerProxy;
 	//Allocation test
 	//bool test = HeapManager_UnitTest();
 	
@@ -60,10 +43,10 @@ int main()
 	assert(pHeapMemory);
 
 	// Create a heap manager for my test heap.
-	HeapManager * pHeapManager = CreateHeapManager(pHeapMemory, sizeHeap, numDescriptors);
-	assert(pHeapManager);
+	HeapManager::pHeapManager = HeapManager::create(pHeapMemory, sizeHeap, numDescriptors);
+	assert(HeapManager::pHeapManager);
 
-	if (pHeapManager == nullptr)
+	if (HeapManager::pHeapManager == nullptr)
 		return false;
 	//startup
 	srand(123);
@@ -78,7 +61,7 @@ int main()
 	assert(playerName != "");
 
 	//intialize player
-	Player *player = new (pHeapManager) Player(playerName);
+	Player *player = new(4, HeapManager::pHeapManager) Player(playerName);
 	player->SetPosition(rand() % 51, rand() % 101);
 	PlayerController * playerCon = new PlayerController();
 	playerCon->SetActor(player);
@@ -155,16 +138,15 @@ int main()
 	}
 
 	std::cout << "Game Over.\n";
-	player->~Player();
-	::operator delete(player, pHeapManager);
+	delete player;
 	//delete player;
 	delete playerCon;
 	//monVec->clear();
 	delete monVec;
 	delete monConVec;
 	//Destroy Heap
-	Destroy(pHeapManager);
-	pHeapManager = nullptr;
+	HeapManager::pHeapManager->destroy();
+	HeapManager::pHeapManager = nullptr;
 
 	HeapFree(GetProcessHeap(), 0, pHeapMemory);
 #ifdef _DEBUG

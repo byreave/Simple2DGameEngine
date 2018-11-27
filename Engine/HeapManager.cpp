@@ -10,7 +10,7 @@ static unsigned char _bAlignLandFill = 0xED; /* fill no-man's land for aligned r
 static unsigned char _bDeadLandFill = 0xDD; /* fill free objects with this */
 static unsigned char _bCleanLandFill = 0xCD; /* fill new objects with this */
 
-
+HeapManager * HeapManager::pHeapManager = nullptr;
 HeapManager * HeapManager::create(void * i_pMemory, size_t i_sizeMemory, unsigned int i_numDescriptors)
 {
 	void * endOfHeap = static_cast<unsigned char *>(i_pMemory) + i_sizeMemory;
