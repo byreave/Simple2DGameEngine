@@ -129,7 +129,6 @@
     <ClInclude Include="HeapManager.h" />
     <ClInclude Include="HeapManagerProxy.h" />
     <ClInclude Include="OverridenNewAndDelete.h" />
-    <ClInclude Include="OverridenNewAndDelete2.h" />
     <ClInclude Include="Point2D-inl.h" />
     <ClInclude Include="Point2D.h" />
     <ClInclude Include="Vector.h" />
