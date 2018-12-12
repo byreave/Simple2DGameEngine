@@ -82,7 +82,7 @@ void * HeapManager::_alloc(size_t i_size)
 	{
 		BlockDescriptor * m_FreeBlockListTail = m_FreeBlockListHead, *m_PrevFreeBlockListTail = nullptr;
 		//get last node of free block list
-		while (m_FreeBlockListTail->m_pBlockStartAddr != nullptr && m_FreeBlockListTail != nullptr)
+		while (m_FreeBlockListTail != nullptr && m_FreeBlockListTail->m_pBlockStartAddr != nullptr)
 		{
 			m_PrevFreeBlockListTail = m_FreeBlockListTail;
 			m_FreeBlockListTail = m_FreeBlockListTail->next;

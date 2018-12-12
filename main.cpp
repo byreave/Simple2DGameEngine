@@ -10,31 +10,78 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+
+
 #endif // _DEBUG
+#include <intrin.h>
+#include <iostream>
+using namespace std;
+
+#pragma intrinsic(_BitScanReverse)
 
 bool MemorySystem_UnitTest();
 
+void bittest(long * num)
+{
+	unsigned char bits[32];
+	long nBit;
+
+	printf_s("Number: %d\n", *num);
+
+	for (nBit = 0; nBit < 32; nBit++)
+	{
+		bits[nBit] = _bittest(num, nBit);
+	}
+
+	printf_s("Binary representation:\n");
+	while (nBit--)
+	{
+		if (bits[nBit])
+			printf_s("1");
+		else
+			printf_s("0");
+	}
+}
 int main(int i_arg, char **)
 {
-	const size_t 		sizeHeap = 1024 * 1024;
+	unsigned long mask = 0x1000;
+	unsigned long index;
+	unsigned char isNonzero;
+	uint32_t arr[5] = { UINT32_MAX, 16, 33, 4, 2 };
+	for (int i = 0; i < 5; ++i)
+	{
+		bittest((long *)&arr[i]);
+	}
+	cout << "Enter a positive integer as the mask: " << flush;
+	cin >> mask;
+	isNonzero = _BitScanReverse(&index, mask);
+	if (isNonzero)
+	{
+		cout << "Mask: " << mask << " Index: " << index << endl;
+	}
+	else
+	{
+		cout << "No set bits found.  Mask is zero." << endl;
+	}
+	//const size_t 		sizeHeap = 1024 * 1024;
 
 	// you may not need this if you don't use a descriptor pool
-	const unsigned int 	numDescriptors = 2048;
+	//const unsigned int 	numDescriptors = 2048;
 
 	// Allocate memory for my test heap.
-	void * pHeapMemory = HeapAlloc(GetProcessHeap(), 0, sizeHeap);
-	assert(pHeapMemory);
+	//void * pHeapMemory = HeapAlloc(GetProcessHeap(), 0, sizeHeap);
+	//assert(pHeapMemory);
 
 	// Create your HeapManager and FixedSizeAllocators.
-	InitializeMemorySystem(pHeapMemory, sizeHeap, numDescriptors);
+	//InitializeMemorySystem(pHeapMemory, sizeHeap, numDescriptors);
 
-	bool success = MemorySystem_UnitTest();
-	assert(success);
+	//bool success = MemorySystem_UnitTest();
+	//assert(success);
 
 	// Clean up your Memory System (HeapManager and FixedSizeAllocators)
-	DestroyMemorySystem();
+	//DestroyMemorySystem();
 
-	HeapFree(GetProcessHeap(), 0, pHeapMemory);
+	//HeapFree(GetProcessHeap(), 0, pHeapMemory);
 
 	// in a Debug build make sure we didn't leak any memory.
 #if defined(_DEBUG)
@@ -43,6 +90,7 @@ int main(int i_arg, char **)
 
 	return 0;
 }
+
 
 bool MemorySystem_UnitTest()
 {
