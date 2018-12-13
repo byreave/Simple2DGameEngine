@@ -91,12 +91,12 @@ void * HeapManager::_alloc(size_t i_size)
 		if (m_PrevFreeBlockListTail == nullptr)
 		{
 			//can add console log here
-			return false;
+			return nullptr;
 		}
 		//not enough block descriptor
 		if (m_FreeBlockListTail == nullptr)
 		{
-			m_FreeBlockListHead = nullptr;
+			return nullptr;
 		}
 		//when it is the free block list head
 		if (prevFreeBlock == nullptr)

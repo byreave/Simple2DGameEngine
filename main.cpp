@@ -48,6 +48,7 @@ int main(int i_arg, char **)
 	unsigned long index;
 	unsigned char isNonzero;
 	uint32_t arr[5] = { UINT32_MAX, 16, 33, 4, 2 };
+	char * test = (char *)malloc(12);
 	for (int i = 0; i < 5; ++i)
 	{
 		bittest((long *)&arr[i]);
