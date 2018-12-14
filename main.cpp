@@ -44,45 +44,34 @@ void bittest(long * num)
 }
 int main(int i_arg, char **)
 {
-	unsigned long mask = 0x1000;
-	unsigned long index;
-	unsigned char isNonzero;
-	uint32_t arr[5] = { UINT32_MAX, 16, 33, 4, 2 };
-	char * test = (char *)malloc(12);
-	for (int i = 0; i < 5; ++i)
-	{
-		bittest((long *)&arr[i]);
-	}
-	cout << "Enter a positive integer as the mask: " << flush;
-	cin >> mask;
-	isNonzero = _BitScanReverse(&index, mask);
-	if (isNonzero)
-	{
-		cout << "Mask: " << mask << " Index: " << index << endl;
-	}
-	else
-	{
-		cout << "No set bits found.  Mask is zero." << endl;
-	}
-	//const size_t 		sizeHeap = 1024 * 1024;
+	const size_t 		sizeHeap = 1024 * 1024;
 
 	// you may not need this if you don't use a descriptor pool
-	//const unsigned int 	numDescriptors = 2048;
+	const unsigned int 	numDescriptors = 2048;
 
 	// Allocate memory for my test heap.
-	//void * pHeapMemory = HeapAlloc(GetProcessHeap(), 0, sizeHeap);
-	//assert(pHeapMemory);
+	void * pHeapMemory = HeapAlloc(GetProcessHeap(), 0, sizeHeap);
+	assert(pHeapMemory);
 
 	// Create your HeapManager and FixedSizeAllocators.
-	//InitializeMemorySystem(pHeapMemory, sizeHeap, numDescriptors);
+	InitializeMemorySystem(pHeapMemory, sizeHeap, numDescriptors);
 
-	//bool success = MemorySystem_UnitTest();
-	//assert(success);
+	//My own test
+	char * test = (char *)malloc(12);
+
+
+
+
+
+
+
+	bool success = MemorySystem_UnitTest();
+	assert(success);
 
 	// Clean up your Memory System (HeapManager and FixedSizeAllocators)
-	//DestroyMemorySystem();
+	DestroyMemorySystem();
 
-	//HeapFree(GetProcessHeap(), 0, pHeapMemory);
+	HeapFree(GetProcessHeap(), 0, pHeapMemory);
 
 	// in a Debug build make sure we didn't leak any memory.
 #if defined(_DEBUG)

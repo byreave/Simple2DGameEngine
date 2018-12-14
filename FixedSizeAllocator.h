@@ -8,7 +8,8 @@ public:
 	~FixedSizeAllocator();
 
 	void * _alloc(size_t i_size);
-	void _free(void * i_ptr);
+	bool _free(void * i_ptr);
+	inline bool Contains(const void * i_ptr) const;
 private:
 	size_t m_sizeBlock;
 	size_t m_numBlock;
