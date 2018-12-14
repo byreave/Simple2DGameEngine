@@ -92,7 +92,7 @@ bool MonsterController::Respawn()
 	//	}
 	//}
 	m_Actor->SetName(newName);
-	delete newName;
+	delete[] newName;
 	m_Actor->SetPosition(rand() % 40 + 50, rand() % 101);
 	m_Actor->SetLives(20);
 	return true;

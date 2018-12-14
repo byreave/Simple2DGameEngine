@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "PlayerController.h"
 #include "MonsterController.h"
+#include "RandomController.h"
 #include "Vector.h"
 #include "ConsoleLog.h"
 
@@ -26,7 +27,7 @@ int main()
 	MonsterController * monCon;
 	MonsterController::SetIDZero();
 	Vector<Monster *> * monVec;
-	Vector<MonsterController *> * monConVec;
+	Vector<BaseController *> * monConVec;
 	char playerName[128], monName[128];
 
 	//startup
@@ -51,8 +52,9 @@ int main()
 	cout<<"Player "<<player->GetName()<<" enters the arena at [" << player->GetPosition().getX() << ", " << player->GetPosition().getY() << "].\n";
 	//create monsters
 	monVec = new Vector<Monster *>();
-	monConVec = new Vector<MonsterController *>();
-	for (int i = 0; i < monNumber; i ++)
+	monConVec = new Vector<BaseController *>();
+	int i = 0;
+	for (i = 0; i < monNumber - 1; i ++)
 	{
 		monCon = new MonsterController();
 		mon = new Monster(monName, i);
@@ -62,6 +64,12 @@ int main()
 		monVec->push(mon);
 		monConVec->push(monCon);
 	}
+	mon = new Monster(monName, i);
+	monVec->push(mon);
+
+	RandomController * rc = new RandomController();
+	rc->SetActor(mon);
+	monConVec->push(rc);
 	mon = nullptr;
 	//mon = new Monster[monNumber];
 	//for (int i = 0; i < monNumber;)
@@ -98,7 +106,10 @@ int main()
 					if (player->ReduceHP())
 					{
 						cout << playerName << "'s head is so hard that " << (*monVec)[i]->GetName() << " ends up dead.\n";
-						(*monConVec)[i]->Respawn();
+						if (i != monNumber - 1)
+							static_cast<MonsterController *>((*monConVec)[i])->Respawn();
+						else
+							cout << "A randomly moving monster died! \n";
 						DEBUG_PRINT("Event", "A monster named %s repawned.", (*monVec)[i]->GetName());
 
 						cout << "However, to avenge its friend another monster named " << (*monVec)[i]->GetName() << " appears at[" << (*monVec)[i]->GetPosition().getX() << ", " << (*monVec)[i]->GetPosition().getY() << "].\n";

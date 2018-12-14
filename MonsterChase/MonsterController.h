@@ -7,6 +7,8 @@ public:
 	MonsterController()
 	{
 		MonsterController::MonsterID++;
+		m_Actor = nullptr;
+		m_Target = nullptr;
 	}
 	~MonsterController();
 	void SetActor(Actor * i_pActor) override { m_Actor = i_pActor; }

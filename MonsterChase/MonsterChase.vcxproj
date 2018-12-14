@@ -139,6 +139,7 @@
     <ClCompile Include="MonsterController.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="RandomController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="MonsterController.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="RandomController.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MonsterChase.rc" />
