@@ -36,7 +36,7 @@ FixedSizeAllocator * FixedSizeAllocator::CreateFixedSizeAllocator(size_t i_sizeB
 		newFSA = nullptr;
 		return nullptr;
 	}
-	newFSA->m_bitArray = BitArray::CreateBitArray(i_sizeBlock * i_numBlock, false, defaultHeap);
+	newFSA->m_bitArray = BitArray::CreateBitArray(i_numBlock, false, defaultHeap);
 	if (newFSA->m_bitArray == nullptr)
 	{
 		defaultHeap->_free(newFSA->m_baseAddr);
@@ -75,10 +75,10 @@ bool FixedSizeAllocator::_free(void * i_ptr)
 	//2. i_ptr is at the right position
 	//3. the block is outstanding
 #ifdef _DEBUG
-	size_t bitIndex = (static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - m_baseAddr) / (m_sizeBlock + nNoMansLandSize);
+	size_t bitIndex = (static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - static_cast<unsigned char *>(m_baseAddr)) / (m_sizeBlock + nNoMansLandSize);
 	if (i_ptr >= m_baseAddr &&
 		i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1) &&
-		(static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - m_baseAddr) % (m_sizeBlock + nNoMansLandSize) == 0 &&
+		(static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - static_cast<unsigned char *>(m_baseAddr)) % (m_sizeBlock + nNoMansLandSize) == 0 &&
 		m_bitArray->IsBitClear(bitIndex)
 		)
 	{
@@ -107,7 +107,7 @@ bool FixedSizeAllocator::_free(void * i_ptr)
 
 }
 
-inline bool FixedSizeAllocator::Contains(const void * i_ptr) const
+bool FixedSizeAllocator::Contains(void * i_ptr) const
 {
 #ifdef _DEBUG
 	if (i_ptr >= m_baseAddr && i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1))

@@ -58,7 +58,12 @@ int main(int i_arg, char **)
 
 	//My own test
 	char * test = (char *)malloc(12);
-
+	unsigned int testbits = 12, i = 0;
+	for (i = 0; i < 32; ++i)
+	{
+		if ((testbits & (1 << i)) != 0)
+			break;
+	}
 
 
 

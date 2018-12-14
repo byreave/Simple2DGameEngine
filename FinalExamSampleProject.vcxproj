@@ -148,7 +148,6 @@
     <ClCompile Include="ConsoleLog.cpp" />
     <ClCompile Include="FixedSizeAllocator.cpp" />
     <ClCompile Include="HeapManager.cpp" />
-    <ClCompile Include="HeapManagerProxy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemorySystem.cpp" />
   </ItemGroup>

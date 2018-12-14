@@ -30,9 +30,6 @@
     <ClCompile Include="HeapManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HeapManagerProxy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BitArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

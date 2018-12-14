@@ -34,3 +34,12 @@ private:
 	BLOCK * m_pBits;
 };
 
+inline bool BitArray::IsBitSet(size_t i_bitNumber) const
+{
+	return operator[] (i_bitNumber);
+}
+
+inline bool BitArray::IsBitClear(size_t i_bitNumber) const
+{
+	return !operator[] (i_bitNumber);
+}

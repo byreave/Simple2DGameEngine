@@ -59,7 +59,7 @@ void operator delete(void * i_ptr)
 	{
 		for (unsigned int i = 0; i < numFSAs; ++i)
 		{
-			assert(FSAs[i]);
+			assert(FSAs[i] != nullptr);
 			if (FSAs[i]->Contains(i_ptr))
 			{
 				FSAs[i]->_free(i_ptr);

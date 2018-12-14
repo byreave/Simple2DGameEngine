@@ -2,15 +2,9 @@
 #include "HeapManager.h"
 #include "FixedSizeAllocator.h"
 
-struct FSAInitData
-{
-	size_t	sizeBlock;
-	size_t	numBlocks;
-};
 
 FSAInitData FSASizes[] = { {16, 100}, {32, 200}, {96, 400} };
-size_t numFSAs = 3;
-FixedSizeAllocator * FSAs[3];
+
 
 bool InitializeMemorySystem(void * i_pHeapMemory, size_t i_sizeHeapMemory, unsigned int i_OptionalNumDescriptors)
 {

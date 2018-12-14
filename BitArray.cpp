@@ -41,7 +41,7 @@ void BitArray::SetAll(void)
 
 bool BitArray::AreAllClear(void) const
 {
-	for (int i = 0; i < m_blockLength; ++i)
+	for (unsigned int i = 0; i < m_blockLength; ++i)
 	{
 		if (m_pBits[i] != 0)
 			return false;
@@ -51,7 +51,7 @@ bool BitArray::AreAllClear(void) const
 
 bool BitArray::AreAllSet(void) const
 {
-	for (int i = 0; i < m_blockLength; ++i)
+	for (unsigned int i = 0; i < m_blockLength; ++i)
 	{
 		if (m_pBits[i] != 1)
 			return false;
@@ -59,15 +59,7 @@ bool BitArray::AreAllSet(void) const
 	return true;
 }
 
-inline bool BitArray::IsBitSet(size_t i_bitNumber) const
-{
-	return operator[] (i_bitNumber);
-}
 
-inline bool BitArray::IsBitClear(size_t i_bitNumber) const
-{
-	return ! operator[] (i_bitNumber);
-}
 
 void BitArray::SetBit(size_t i_bitNumber)
 {
@@ -91,9 +83,23 @@ void BitArray::ClearBit(size_t i_bitNumber)
 #endif
 }
 
+bool BitArray::GetFirstClearBit(size_t & o_bitNumber) const
+{
+	size_t index = 0;
+	while (m_pBits[index] == 1 && index < m_blockLength)
+		index++;
+	BLOCK block = m_pBits[index];
+	unsigned int i = 0U;
+	for (i = 0; i < sizeof(BLOCK) * 8; ++i)
+	{
+		if ((block & (1 << i)) == 0)
+			break;
+	}
+	return index * sizeof(BLOCK) * 8 + i;
+}
+
 bool BitArray::GetFirstSetBit(size_t & o_bitNumber) const
 {
-	assert(o_bitNumber < m_numBits);
 	unsigned char isNonZero;
 	const size_t bitsPerBlock = sizeof(BLOCK) * 8;
 	size_t index = 0;
@@ -106,7 +112,7 @@ bool BitArray::GetFirstSetBit(size_t & o_bitNumber) const
 	isNonZero = _BitScanForward64(reinterpret_cast<unsigned long *>(&o_bitNumber), m_pBits[index]);
 #endif
 	o_bitNumber = index * bitsPerBlock + o_bitNumber;
-	if (isNonZero || o_bitNumber >= m_numBits) //all zero or the found bit is beyond the array
+	if (!isNonZero || o_bitNumber >= m_numBits) //all zero or the found bit is beyond the array
 		return false;
 	else
 		return true;

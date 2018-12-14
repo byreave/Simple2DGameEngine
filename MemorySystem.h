@@ -7,9 +7,9 @@ struct FSAInitData
 	size_t	numBlocks;
 };
 
-FSAInitData FSASizes[] = { {16, 100}, {32, 200}, {96, 400} };
-size_t numFSAs = 3;
-FixedSizeAllocator * FSAs[3];
+FSAInitData FSASizes[];
+const static size_t numFSAs = 3;
+static FixedSizeAllocator * FSAs[numFSAs];
 
 // InitializeMemorySystem - initialize your memory system including your HeapManager and some FixedSizeAllocators
 bool InitializeMemorySystem(void * i_pHeapMemory, size_t i_sizeHeapMemory, unsigned int i_OptionalNumDescriptors);
