@@ -78,7 +78,7 @@ bool FixedSizeAllocator::_free(void * i_ptr)
 	size_t bitIndex = (static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - static_cast<unsigned char *>(m_baseAddr)) / (m_sizeBlock + nNoMansLandSize);
 	if (i_ptr >= m_baseAddr &&
 		i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1) &&
-		(static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - static_cast<unsigned char *>(m_baseAddr)) % (m_sizeBlock + nNoMansLandSize) == 0 &&
+		//(static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - static_cast<unsigned char *>(m_baseAddr)) % (m_sizeBlock + nNoMansLandSize) == 0 &&
 		m_bitArray->IsBitClear(bitIndex)
 		)
 	{

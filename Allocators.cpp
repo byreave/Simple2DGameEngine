@@ -6,7 +6,7 @@
 #include "FixedSizeAllocator.h"
 #include <stdio.h>
 
-
+FixedSizeAllocator * FSAs[numFSAs] = {};
 void * __cdecl malloc(size_t i_size)
 {
 	// replace with calls to your HeapManager or FixedSizeAllocators

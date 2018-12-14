@@ -19,6 +19,7 @@ using namespace std;
 
 #pragma intrinsic(_BitScanReverse)
 
+
 bool MemorySystem_UnitTest();
 
 void bittest(long * num)
