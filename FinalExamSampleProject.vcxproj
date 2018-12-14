@@ -146,6 +146,7 @@
     <ClCompile Include="Allocators.cpp" />
     <ClCompile Include="BitArray.cpp" />
     <ClCompile Include="ConsoleLog.cpp" />
+    <ClCompile Include="FixedSizeAllocator.cpp" />
     <ClCompile Include="HeapManager.cpp" />
     <ClCompile Include="HeapManagerProxy.cpp" />
     <ClCompile Include="main.cpp" />
@@ -154,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="BitArray.h" />
     <ClInclude Include="ConsoleLog.h" />
+    <ClInclude Include="FixedSizeAllocator.h" />
     <ClInclude Include="HeapManager.h" />
     <ClInclude Include="HeapManagerProxy.h" />
     <ClInclude Include="MemorySystem.h" />

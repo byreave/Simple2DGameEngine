@@ -9,7 +9,6 @@ class HeapManager;
 class BitArray
 {
 public:
-	BitArray(size_t i_numBits, bool i_bInitToZero);
 	static BitArray * CreateBitArray(size_t i_numBits, bool i_bInitToZero, HeapManager * heapAllocator);
 	~BitArray();
 	void ClearAll(void);
