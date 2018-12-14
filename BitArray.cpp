@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <string.h>
 #include <intrin.h>
+#include "HeapManager.h"
 
 BitArray::BitArray(size_t i_numBits, bool i_bInitToZero)
 {
@@ -13,6 +14,21 @@ BitArray::BitArray(size_t i_numBits, bool i_bInitToZero)
 	assert(m_pBits);
 	memset(m_pBits, i_bInitToZero ? 0 : 1, m_blockLength);
 	m_numBits = i_numBits;
+}
+
+BitArray * BitArray::CreateBitArray(size_t i_numBits, bool i_bInitToZero, HeapManager * heapAllocator)
+{
+	BitArray * newBitArray = (BitArray *)heapAllocator->_alloc(sizeof(BitArray));
+	const size_t bitsPerBlock = sizeof(BLOCK) * 8; //8 = bits per byte
+	newBitArray->m_blockLength = i_numBits / bitsPerBlock;
+	if (i_numBits % bitsPerBlock > 0) //round up
+		newBitArray->m_blockLength++;
+	newBitArray->m_pBits = (BLOCK *)heapAllocator->_alloc(sizeof(BLOCK) *newBitArray->m_blockLength);
+		//new BLOCK[m_blockLength];
+	assert(newBitArray->m_pBits);
+	memset(newBitArray->m_pBits, i_bInitToZero ? 0 : 1, newBitArray->m_blockLength);
+	newBitArray->m_numBits = i_numBits;
+	return nullptr;
 }
 
 BitArray::~BitArray()
