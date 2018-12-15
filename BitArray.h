@@ -23,8 +23,8 @@ public:
 	void SetBit(size_t i_bitNumber);
 	void ClearBit(size_t i_bitNumber);
 
-	bool GetFirstClearBit(size_t & o_bitNumber) const;
-	bool GetFirstSetBit(size_t & o_bitNumber) const;
+	bool GetFirstClearBit(unsigned long & o_bitNumber) const;
+	bool GetFirstSetBit(unsigned long & o_bitNumber) const;
 
 	bool operator[](size_t i_index) const;
 

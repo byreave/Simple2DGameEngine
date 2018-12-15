@@ -13,36 +13,13 @@
 
 
 #endif // _DEBUG
-#include <intrin.h>
 #include <iostream>
 using namespace std;
 
-#pragma intrinsic(_BitScanReverse)
 
 
 bool MemorySystem_UnitTest();
 
-void bittest(long * num)
-{
-	unsigned char bits[32];
-	long nBit;
-
-	printf_s("Number: %d\n", *num);
-
-	for (nBit = 0; nBit < 32; nBit++)
-	{
-		bits[nBit] = _bittest(num, nBit);
-	}
-
-	printf_s("Binary representation:\n");
-	while (nBit--)
-	{
-		if (bits[nBit])
-			printf_s("1");
-		else
-			printf_s("0");
-	}
-}
 int main(int i_arg, char **)
 {
 	const size_t 		sizeHeap = 1024 * 1024;
@@ -58,14 +35,6 @@ int main(int i_arg, char **)
 	InitializeMemorySystem(pHeapMemory, sizeHeap, numDescriptors);
 
 	//My own test
-	/*char * test = (char *)malloc(12);
-	unsigned int testbits = 12, i = 0;
-	for (i = 0; i < 32; ++i)
-	{
-		if ((testbits & (1 << i)) != 0)
-			break;
-	}*/
-
 
 
 

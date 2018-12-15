@@ -56,8 +56,6 @@ FixedSizeAllocator::~FixedSizeAllocator()
 		DEBUG_PRINT("Warning", "Outstanding blocks found in this heap while destructing.\n");
 	}
 	memset(m_baseAddr, _bDeadLandFill, m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1));
-#else
-	memset(m_baseAddr, _bDeadLandFill, m_sizeBlock * m_numBlock);
 #endif // _DEBUG
 	delete m_bitArray;
 	m_bitArray = nullptr;
@@ -68,7 +66,7 @@ FixedSizeAllocator::~FixedSizeAllocator()
 void * FixedSizeAllocator::_alloc(size_t i_size)
 {
 	assert(i_size <= m_sizeBlock);
-	size_t availableBlock;
+	unsigned long availableBlock;
 	if (!m_bitArray->GetFirstSetBit(availableBlock))
 		return nullptr;
 	m_bitArray->ClearBit(availableBlock);
@@ -111,10 +109,10 @@ bool FixedSizeAllocator::_free(void * i_ptr)
 		return false;
 	}
 #else
-	size_t bitIndex = (static_cast<unsigned char *>(i_ptr)  - m_baseAddr) / m_sizeBlock;
+	size_t bitIndex = (static_cast<unsigned char *>(i_ptr)  - static_cast<unsigned char *>(m_baseAddr)) / m_sizeBlock;
 	if (i_ptr >= m_baseAddr &&
 		(i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock) &&
-		(static_cast<unsigned char *>(i_ptr) - m_baseAddr) % m_sizeBlock == 0 &&
+		(static_cast<unsigned char *>(i_ptr) - static_cast<unsigned char *>(m_baseAddr)) % m_sizeBlock == 0 &&
 		m_bitArray->IsBitClear(bitIndex)
 		)
 	{
