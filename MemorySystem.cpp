@@ -30,6 +30,11 @@ void Collect()
 
 void DestroyMemorySystem()
 {
+	for (unsigned int i = 0; i < numFSAs; ++i)
+	{
+		delete FSAs[i];
+		FSAs[i] = nullptr;
+	}
 	HeapManager::pHeapManager->destroy();
 	// Destroy your HeapManager and FixedSizeAllocators
 }

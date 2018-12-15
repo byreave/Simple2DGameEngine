@@ -58,13 +58,13 @@ int main(int i_arg, char **)
 	InitializeMemorySystem(pHeapMemory, sizeHeap, numDescriptors);
 
 	//My own test
-	char * test = (char *)malloc(12);
+	/*char * test = (char *)malloc(12);
 	unsigned int testbits = 12, i = 0;
 	for (i = 0; i < 32; ++i)
 	{
 		if ((testbits & (1 << i)) != 0)
 			break;
-	}
+	}*/
 
 
 
@@ -97,6 +97,11 @@ bool MemorySystem_UnitTest()
 	long	numCollects = 0;
 
 	size_t totalAllocated = 0;
+
+	// reserve space in AllocatedAddresses for the maximum number of allocation attempts
+	// prevents new returning null when std::vector expands the underlying array
+	AllocatedAddresses.reserve(10 * 1024);
+
 	// allocate memory of random sizes up to 1024 bytes from the heap manager
 	// until it runs out of memory
 	do

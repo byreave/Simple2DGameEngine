@@ -50,7 +50,19 @@ FixedSizeAllocator * FixedSizeAllocator::CreateFixedSizeAllocator(size_t i_sizeB
 
 FixedSizeAllocator::~FixedSizeAllocator()
 {
-	//TODO: check if there is set bit
+#ifdef _DEBUG
+	if (!m_bitArray->AreAllSet())
+	{
+		DEBUG_PRINT("Warning", "Outstanding blocks found in this heap while destructing.\n");
+	}
+	memset(m_baseAddr, _bDeadLandFill, m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1));
+#else
+	memset(m_baseAddr, _bDeadLandFill, m_sizeBlock * m_numBlock);
+#endif // _DEBUG
+	delete m_bitArray;
+	m_bitArray = nullptr;
+	delete m_baseAddr;
+	m_baseAddr = nullptr;
 }
 
 void * FixedSizeAllocator::_alloc(size_t i_size)
@@ -62,7 +74,7 @@ void * FixedSizeAllocator::_alloc(size_t i_size)
 	m_bitArray->ClearBit(availableBlock);
 #ifdef _DEBUG
 	//fill value
-	return memset(static_cast<unsigned char *>(m_baseAddr) + (m_sizeBlock + nNoMansLandSize) * availableBlock, _bCleanLandFill, i_size);
+	return memset(static_cast<unsigned char *>(m_baseAddr) + nNoMansLandSize + (m_sizeBlock + nNoMansLandSize) * availableBlock, _bCleanLandFill, i_size);
 #else
 	return static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * availableBlock;
 #endif // _DEBUG
@@ -77,13 +89,21 @@ bool FixedSizeAllocator::_free(void * i_ptr)
 #ifdef _DEBUG
 	size_t bitIndex = (static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - static_cast<unsigned char *>(m_baseAddr)) / (m_sizeBlock + nNoMansLandSize);
 	if (i_ptr >= m_baseAddr &&
-		i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1) &&
+		i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1) //&&
 		//(static_cast<unsigned char *>(i_ptr) - nNoMansLandSize - static_cast<unsigned char *>(m_baseAddr)) % (m_sizeBlock + nNoMansLandSize) == 0 &&
-		m_bitArray->IsBitClear(bitIndex)
+		//m_bitArray->IsBitClear(bitIndex)
 		)
 	{
-		m_bitArray->SetBit(bitIndex);
-		return true;
+		if (m_bitArray->IsBitClear(bitIndex))
+		{
+			m_bitArray->SetBit(bitIndex);
+			return true;
+		}
+		else
+		{
+			DEBUG_PRINT("Error", "Address 0x%" PRIXPTR " is not clear.\n", reinterpret_cast<uintptr_t>(i_ptr));
+			return false;
+		}
 	}
 	else
 	{
@@ -110,9 +130,9 @@ bool FixedSizeAllocator::_free(void * i_ptr)
 bool FixedSizeAllocator::Contains(void * i_ptr) const
 {
 #ifdef _DEBUG
-	if (i_ptr >= m_baseAddr && i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1))
+	if (i_ptr >= m_baseAddr && i_ptr < static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1))
 #else
-	if (i_ptr >= m_baseAddr && i_ptr <= static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock)
+	if (i_ptr >= m_baseAddr && i_ptr < static_cast<unsigned char *>(m_baseAddr) + m_sizeBlock * m_numBlock)
 #endif // _DEBUG
 		return true;
 	return false;
