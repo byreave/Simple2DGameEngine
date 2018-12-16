@@ -51,9 +51,10 @@ FixedSizeAllocator * FixedSizeAllocator::CreateFixedSizeAllocator(size_t i_sizeB
 FixedSizeAllocator::~FixedSizeAllocator()
 {
 #ifdef _DEBUG
-	if (!m_bitArray->AreAllSet())
+	unsigned long clearBit;
+	if (!m_bitArray->GetFirstClearBit(clearBit))
 	{
-		DEBUG_PRINT("Warning", "Outstanding blocks found in this heap while destructing.\n");
+		DEBUG_PRINT("Warning", "Outstanding blocks index %d found in this heap while destructing.\n", clearBit);
 	}
 	memset(m_baseAddr, _bDeadLandFill, m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1));
 #endif // _DEBUG
