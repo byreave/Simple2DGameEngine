@@ -58,9 +58,11 @@ FixedSizeAllocator::~FixedSizeAllocator()
 	}
 	memset(m_baseAddr, _bDeadLandFill, m_sizeBlock * m_numBlock + nNoMansLandSize * (m_numBlock + 1));
 #endif // _DEBUG
-	delete m_bitArray;
+	if(m_bitArray != nullptr)
+		delete m_bitArray;
 	m_bitArray = nullptr;
-	delete m_baseAddr;
+	if(m_baseAddr != nullptr)
+		delete m_baseAddr;
 	m_baseAddr = nullptr;
 }
 
