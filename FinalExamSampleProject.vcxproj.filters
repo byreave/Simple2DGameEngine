@@ -47,12 +47,6 @@
     <ClInclude Include="HeapManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeapManagerProxy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OverridenNewAndDelete.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BitArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
