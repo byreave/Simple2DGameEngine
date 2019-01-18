@@ -126,17 +126,12 @@
   <ItemGroup>
     <ClInclude Include="ConsoleLog.h" />
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="HeapManager.h" />
-    <ClInclude Include="HeapManagerProxy.h" />
     <ClInclude Include="Point2D-inl.h" />
     <ClInclude Include="Point2D.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleLog.cpp" />
-    <ClCompile Include="HeapManager.cpp" />
-    <ClCompile Include="HeapManagerProxy.cpp" />
-    <ClCompile Include="HeapManager_UnitTest.cpp" />
     <ClCompile Include="Point2D_UnitTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
