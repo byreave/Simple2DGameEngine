@@ -22,7 +22,7 @@ void Actor::SetName(const char * newName)
 	memcpy(m_name, newName, strlen(newName) + 1);
 }
 
-const Point2D<int> Actor::GetPosition() const
+const Point2D<float> Actor::GetPosition() const
 {
 	return m_pos;
 }

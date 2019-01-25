@@ -6,7 +6,7 @@ class Monster : public Actor
 {
 public:
 	Monster(const char * name, int initial_num);
-	Monster(const char * name, int lives, const Point2D<int>& pos);
+	Monster(const char * name, int lives, const Point2D<float>& pos);
 	~Monster();
 };
 

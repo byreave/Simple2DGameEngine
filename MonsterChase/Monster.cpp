@@ -24,7 +24,7 @@ Monster::Monster(const char * name, int initial_num)
 	SetPosition(rand() % 50 + 50, rand() % 101);
 }
 
-Monster::Monster(const char * name, int lives, const Point2D<int>& pos)
+Monster::Monster(const char * name, int lives, const Point2D<float>& pos)
 	:Actor(name, lives, pos)
 {
 }

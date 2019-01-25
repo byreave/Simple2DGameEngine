@@ -4,7 +4,7 @@
 
 
 
-Player::Player(const Point2D<int> & pos, int lives)
+Player::Player(const Point2D<float> & pos, int lives)
 {
 	m_pos = pos;
 	m_lives = lives;

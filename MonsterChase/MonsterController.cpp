@@ -7,7 +7,7 @@ MonsterController::~MonsterController()
 }
 
 //True means that player was caught
-bool MonsterController::Move(const Point2D<int>& playerPos)
+bool MonsterController::Move(const Point2D<float>& playerPos)
 {
 	int distanceX = playerPos.getX() -m_Actor->GetPosition().getX();
 	int distanceY = playerPos.getY() -m_Actor->GetPosition().getY();

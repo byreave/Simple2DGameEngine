@@ -8,7 +8,7 @@ void PlayerController::UpdateActor()
 	{
 		if (m_Actor)
 		{
-			Point2D<int> Movement = GetMoveFromUserInput();
+			Point2D<float> Movement = GetMoveFromUserInput();
 			if (m_move == 'W' || m_move == 'w')
 				if (m_Actor->GetPosition().getY() > 0)
 				{
@@ -57,28 +57,28 @@ void PlayerController::UpdateActor()
 	}
 }
 
-Point2D<int> PlayerController::GetMoveFromUserInput()
+Point2D<float> PlayerController::GetMoveFromUserInput()
 {
 	switch (m_move)
 	{
 	case 'w':
 	case 'W':
-		return Point2D<int>(0, -1);
+		return Point2D<float>(0, -1);
 		break;
 	case 'a':
 	case 'A':
-		return Point2D<int>(-1, 0);
+		return Point2D<float>(-1, 0);
 		break;
 	case 's':
 	case 'S':
-		return Point2D<int>(0, 1);
+		return Point2D<float>(0, 1);
 		break;
 	case 'd':
 	case 'D':
-		return Point2D<int>(1, 0);
+		return Point2D<float>(1, 0);
 		break;
 	default:
-		return Point2D<int>(0, 0);
+		return Point2D<float>(0, 0);
 		break;
 	}
 }

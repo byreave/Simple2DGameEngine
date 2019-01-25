@@ -21,7 +21,7 @@ public:
 		}
 	}
 	//Move Monster according to player's position:AI
-	bool Move(const Point2D<int> & playerPos);
+	bool Move(const Point2D<float> & playerPos);
 	bool Respawn();
 	static void SetIDZero()
 	{

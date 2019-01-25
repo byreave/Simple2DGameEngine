@@ -4,11 +4,22 @@ namespace Engine {
 	class Point2D
 	{
 	public:
-		Point2D() {}
+		Point2D() {
+			_x = 0;
+			_y = 0;
+		}
 		Point2D(const T & x, const T & y) { _x = x, _y = y; }
 		~Point2D(){}
 		inline const Point2D<T> operator + (const Point2D<T> & other) const;
 		inline const Point2D<T> operator - (const Point2D<T> & other) const;
+		inline const Point2D<T> operator / (const float divider) const;
+		inline const Point2D<T> operator * (const float multiplier) const;
+		inline const Point2D<T> operator * (const Point2D<T> & other) const;
+		inline const Point2D<T> operator *= (const float multiplier);
+		inline const Point2D<T> operator *= (const Point2D<T> & other);
+
+		inline const Point2D<T> operator /= (const float divider);
+
 		Point2D<T>& operator += (const Point2D<T> & other);
 		Point2D<T>& operator -= (const Point2D<T> & other);
 		inline bool operator == (const Point2D<T> & other) const;
@@ -36,18 +47,60 @@ namespace Engine {
 	}
 
 	template<typename T>
+	inline const Point2D<T> Point2D<T>::operator/(const float divider) const
+	{
+		return Point2D<T>(_x / divider, _y / divider);
+	}
+
+	template<typename T>
+	inline const Point2D<T> Point2D<T>::operator*(const float multiplier) const
+	{
+		return Point2D<T>(_x * multiplier, _y * multiplier);
+	}
+
+	template<typename T>
+	inline const Point2D<T> Point2D<T>::operator*(const Point2D<T>& other) const
+	{
+		return Point2D<T>(_x * other._x, _y * other._y);
+	}
+
+	template<typename T>
+	inline const Point2D<T> Point2D<T>::operator*=(const float multiplier)
+	{
+		_x *= multiplier;
+		_y *= multiplier;
+		return *this;
+	}
+
+	template<typename T>
+	inline const Point2D<T> Point2D<T>::operator*=(const Point2D<T>& other)
+	{
+		_x *= other._x;
+		_y *= other._y;
+		return *this;
+	}
+
+	template<typename T>
+	inline const Point2D<T> Point2D<T>::operator/=(const float divider)
+	{
+		this->_x /= divider;
+		this->_y /= divider;
+		return *this;
+	}
+
+	template<typename T>
 	Point2D<T>& Point2D<T>::operator+=(const Point2D<T>& other)
 	{
-		this._x += other._x;
-		this._y += other._y;
+		this->_x += other._x;
+		this->_y += other._y;
 		return *this;
 	}
 
 	template<typename T>
 	Point2D<T>& Point2D<T>::operator-=(const Point2D<T>& other)
 	{
-		this._x -= other._x;
-		this._y -= other._y;
+		this->_x -= other._x;
+		this->_y -= other._y;
 		return *this;
 	}
 
@@ -63,6 +116,12 @@ namespace Engine {
 	const Point2D<T> Point2D<T>::operator-() const
 	{
 		return Point2D<T>(-_x, -_y);
+	}
+
+	template<typename T>
+	inline bool Point2D<T>::operator==(const Point2D<T>& other) const
+	{
+		return _x == other._x && _y == other._y;
 	}
 }
 

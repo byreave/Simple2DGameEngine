@@ -9,7 +9,7 @@ public:
 	void UpdateActor() override;
 	
 
-	Point2D<int> GetMoveFromUserInput();
+	Point2D<float> GetMoveFromUserInput();
 	void SetMove(char move) { m_move = move; }
 	~PlayerController();
 	

@@ -12,15 +12,15 @@ RandomController::RandomController()
 
 void RandomController::UpdateActor()
 {
-	Point2D<int> move = GetRandomMovement();
+	Point2D<float> move = GetRandomMovement();
 	m_Actor->SetPosition(m_Actor->GetPosition() + move);
 	std::cout << "Actor " << m_Actor->GetName() << " moves randomly to [" << m_Actor->GetPosition().getX() << ", " << m_Actor->GetPosition().getY() << "].\n";
 }
 
-Point2D<int> RandomController::GetRandomMovement()
+Point2D<float> RandomController::GetRandomMovement()
 {
 	srand(time(NULL));
-	return Point2D<int>(rand() % 3 - 1, rand() % 3 - 1);
+	return Point2D<float>(rand() % 3 - 1, rand() % 3 - 1);
 }
 
 RandomController::~RandomController()

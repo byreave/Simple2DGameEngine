@@ -2,8 +2,7 @@
 #include<iostream>
 
 namespace Engine {
-	void initialize()
-	{
-		std::cout << "Initialize compelete!\n";
-	}
+	bool Startup();
+	
+	void Shutdown();
 }

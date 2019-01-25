@@ -5,7 +5,7 @@ using namespace Engine;
 class Player : public Actor
 {
 public:
-	Player(const Point2D<int> & pos, int lives = 3);
+	Player(const Point2D<float> & pos, int lives = 3);
 	Player(char * name);
 	
 	bool ReduceHP();
