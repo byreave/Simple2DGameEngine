@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <Windows.h>
 #include "Game.h"
-
+#include "Clock.h"
 
 GLib::Sprites::Sprite * pGoodGuy;
 GLib::Sprites::Sprite * pBadGuy;
@@ -126,6 +126,8 @@ bool Game::Startup(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lp
 		// Create a couple of sprites using our own helper routine CreateSprite
 		pGoodGuy = CreateSprite("data\\Tracer.dds");
 		pBadGuy = CreateSprite("data\\Tracer.dds");
+		// Clock Time
+		Timing::deltaTime = Timing::Clock::now();
 	}
 	return bSuccess;
 }
@@ -145,6 +147,7 @@ void Game::Run()
 			GLib::BeginRendering();
 			// Tell GLib that we want to render some sprites
 			GLib::Sprites::BeginRendering();
+			DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
 
 			if (pGoodGuy)
 			{
