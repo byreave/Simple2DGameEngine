@@ -133,7 +133,7 @@ bool Game::Startup(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lp
 }
 
 void Game::Run()
-{
+{  
 	bool bQuit = false;
 
 	do
