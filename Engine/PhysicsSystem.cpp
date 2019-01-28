@@ -1,14 +1,6 @@
 #include "PhysicsSystem.h"
 
-inline void Physics::PhysicsSystem::AddForce(Point2D<float> i_Force)
-{
-	m_Force += i_Force;
-}
 
-inline void Physics::PhysicsSystem::AddForce(float i_xForce, float i_yForce)
-{
-	m_Force += Point2D<float>(i_xForce, i_yForce);
-}
 //Midpoint Method
 void Physics::PhysicsSystem::Update(float deltaTime)
 {
@@ -17,5 +9,13 @@ void Physics::PhysicsSystem::Update(float deltaTime)
 	m_GameObject->SetPosition(newPos);
 
 	//Update Drag
-	m_Force -= m_Velocity * m_Velocity * m_DragCoef;
+	m_Force = - m_Velocity * m_Velocity * m_DragCoef;
+}
+
+void Physics::Update(float deltaTime)
+{
+	for (auto phyInfo = PhysicsInfo.begin(); phyInfo != PhysicsInfo.end(); ++phyInfo)
+	{
+		(*phyInfo)->Update(deltaTime);
+	}
 }

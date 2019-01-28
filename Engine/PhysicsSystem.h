@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include <vector>
 namespace Physics {
 	class PhysicsSystem {
 	private:
@@ -31,4 +32,16 @@ namespace Physics {
 		inline void AddForce(float i_xForce, float i_yForce);
 		void Update(float deltaTime);
 	};
+	extern std::vector<PhysicsSystem *> PhysicsInfo;
+	void Update(float deltaTime);
+}
+
+inline void Physics::PhysicsSystem::AddForce(Point2D<float> i_Force)
+{
+	m_Force = i_Force;
+}
+
+inline void Physics::PhysicsSystem::AddForce(float i_xForce, float i_yForce)
+{
+	m_Force = Point2D<float>(i_xForce, i_yForce);
 }

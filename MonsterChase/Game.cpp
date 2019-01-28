@@ -11,17 +11,41 @@
 #include <Windows.h>
 #include "Game.h"
 #include "Clock.h"
+//#include <vector>
+#include "Character.h"
+#include "PhysicsSystem.h"
 
-GLib::Sprites::Sprite * pGoodGuy;
-GLib::Sprites::Sprite * pBadGuy;
+std::vector<Physics::PhysicsSystem *> Physics::PhysicsInfo;
+std::vector<Character *> GameCharacters;
 void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 {
+	if (i_VKeyID == 'a' || i_VKeyID == 'A')
+	{
+		if (bWentDown)
+		{
+			DEBUG_PRINT("Info", "A pressed!");
+			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
+			{
+				Physics::PhysicsSystem * p = *phy;
+				p->AddForce(10.0f, 0.0f);
+			}
+		}
+		else
+		{
+			DEBUG_PRINT("Info", "A released!");
+			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
+			{
+				Physics::PhysicsSystem * p = *phy;
+				p->AddForce(0.0f, 0.0f);
+			}
+		}
+	}
 #ifdef _DEBUG
-	const size_t	lenBuffer = 65;
+	/*const size_t	lenBuffer = 65;
 	char			Buffer[lenBuffer];
 
 	sprintf_s(Buffer, lenBuffer, "VKey 0x%04x went %s\n", i_VKeyID, bWentDown ? "down" : "up");
-	OutputDebugStringA(Buffer);
+	OutputDebugStringA(Buffer);*/
 #endif // __DEBUG
 }
 
@@ -122,12 +146,17 @@ bool Game::Startup(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lp
 	{
 		// IMPORTANT (if we want keypress info from GLib): Set a callback for notification of key presses
 		GLib::SetKeyStateChangeCallback(TestKeyCallback);
-
+		GLib::Sprites::Sprite * pGoodGuy;
 		// Create a couple of sprites using our own helper routine CreateSprite
 		pGoodGuy = CreateSprite("data\\Tracer.dds");
-		pBadGuy = CreateSprite("data\\Tracer.dds");
 		// Clock Time
 		Timing::deltaTime = Timing::Clock::now();
+
+		Character * tmpGoodGuy = new Character("Byreave", 3, Point2D<float>(0.0f, 150.0f), pGoodGuy);
+		GameCharacters.push_back(tmpGoodGuy);
+
+		Physics::PhysicsSystem * tmpPhysics = new Physics::PhysicsSystem(tmpGoodGuy);
+		Physics::PhysicsInfo.push_back(tmpPhysics);
 	}
 	return bSuccess;
 }
@@ -143,47 +172,25 @@ void Game::Run()
 
 		if (!bQuit)
 		{
+			float deltaTime = Timing::GetTimeSinceLastCall();
+			//DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
+			Physics::Update(deltaTime);
+			DEBUG_PRINT("Debug", "Character x pos: %f", (*GameCharacters.begin())->GetPosition().getX());
 			// IMPORTANT: Tell GLib that we want to start rendering
 			GLib::BeginRendering();
 			// Tell GLib that we want to render some sprites
 			GLib::Sprites::BeginRendering();
-			DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
+			
 
-			if (pGoodGuy)
+			for (auto renderObj = GameCharacters.begin(); renderObj != GameCharacters.end(); ++renderObj)
 			{
-				static float			moveDist = .01f;
-				static float			moveDir = moveDist;
+				Character * c = *renderObj;
+				GLib::Point2D tmpPoint;
+				tmpPoint.x = c->GetPosition().getX();
+				tmpPoint.y = c->GetPosition().getY();
+				GLib::Sprites::RenderSprite(*(c->GetSprite()), tmpPoint, 0.0f);
 
-				static GLib::Point2D	Offset = { -180.0f, -100.0f };
-
-				if (Offset.x < -220.0f)
-					moveDir = moveDist;
-				else if (Offset.x > -140.0f)
-					moveDir = -moveDist;
-
-				Offset.x += moveDir;
-
-				// Tell GLib to render this sprite at our calculated location
-				GLib::Sprites::RenderSprite(*pGoodGuy, Offset, 0.0f);
 			}
-			if (pBadGuy)
-			{
-				static float			moveDist = .02f;
-				static float			moveDir = -moveDist;
-
-				static GLib::Point2D	Offset = { 180.0f, -100.0f };
-
-				if (Offset.x > 200.0f)
-					moveDir = -moveDist;
-				else if (Offset.x < 160.0f)
-					moveDir = moveDist;
-
-				Offset.x += moveDir;
-
-				// Tell GLib to render this sprite at our calculated location
-				GLib::Sprites::RenderSprite(*pBadGuy, Offset, 0.0f);
-			}
-
 			// Tell GLib we're done rendering sprites
 			GLib::Sprites::EndRendering();
 			// IMPORTANT: Tell GLib we're done rendering
@@ -194,11 +201,16 @@ void Game::Run()
 
 void Game::Shutdown()
 {
-	if (pGoodGuy)
-		GLib::Sprites::Release(pGoodGuy);
-	if (pBadGuy)
-		GLib::Sprites::Release(pBadGuy);
-
+	for (auto gameObj = GameCharacters.begin(); gameObj != GameCharacters.end(); ++gameObj)
+	{
+		if(static_cast<Character *>(*gameObj)->GetSprite())
+			GLib::Sprites::Release((*gameObj)->GetSprite());
+		if (*gameObj)
+		{
+			delete *gameObj;
+		}
+	}
+	GameCharacters.clear();
 	// IMPORTANT:  Tell GLib to shutdown, releasing resources.
 	GLib::Shutdown();
 }
