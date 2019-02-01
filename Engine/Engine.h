@@ -1,8 +1,7 @@
 #pragma once
-#include<iostream>
-
+#include <Windows.h>
 namespace Engine {
-	bool Startup();
+	bool Startup(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lpCmdLine, int i_nCmdShow);
 	
 	void Shutdown();
 }

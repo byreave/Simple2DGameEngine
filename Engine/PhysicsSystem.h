@@ -1,23 +1,23 @@
 #pragma once
-#include "Actor.h"
+#include "GameObject.h"
 #include <vector>
 namespace Physics {
 	class PhysicsSystem {
 	private:
-		Actor * m_GameObject;
+		GameObject * m_GameObject;
 		float m_Mass;
 		float m_DragCoef; //Positive
 		Point2D<float> m_Force;
 		Point2D<float> m_Velocity;
 	public:
-		PhysicsSystem(Actor * i_GameObject)
+		PhysicsSystem(GameObject * i_GameObject)
 			:
 			m_GameObject(i_GameObject)
 		{
 			m_Mass = 1.0f;
 			m_DragCoef = 0.2f;
 		}
-		PhysicsSystem(Actor * i_GameObject, float i_Mass, float i_DragCoef)
+		PhysicsSystem(GameObject * i_GameObject, float i_Mass, float i_DragCoef)
 			:
 			m_GameObject(i_GameObject),
 			m_Mass(i_Mass),

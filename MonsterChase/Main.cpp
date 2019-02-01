@@ -9,9 +9,9 @@
 int WINAPI wWinMain(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lpCmdLine, int i_nCmdShow)
 {
 
-	if (Engine::Startup())
+	if (Engine::Startup(i_hInstance, i_hPrevInstance, i_lpCmdLine, i_nCmdShow))
 	{
-		if (Game::Startup(i_hInstance, i_hPrevInstance, i_lpCmdLine, i_nCmdShow))
+		if (Game::Startup())
 		{
 			Game::Run();
 			Game::Shutdown();

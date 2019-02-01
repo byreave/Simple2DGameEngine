@@ -1,11 +1,13 @@
 #include "Engine.h"
-bool Engine::Startup()
+#include "GLib.h"
+bool Engine::Startup(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lpCmdLine, int i_nCmdShow)
 {
-	std::cout << "Engine initialize compelete!\n";
-	return true;
+	// IMPORTANT: first we need to initialize GLib
+	return GLib::Initialize(i_hInstance, i_nCmdShow, "GLibTest", -1, 800, 600);
 }
 
 void Engine::Shutdown()
 {
-	std::cout << "Engine shuts down compelete!\n";
+	// IMPORTANT:  Tell GLib to shutdown, releasing resources.
+	GLib::Shutdown();
 }

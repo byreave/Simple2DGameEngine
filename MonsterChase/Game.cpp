@@ -6,17 +6,16 @@
 #endif // _DEBUG
 #include "ConsoleLog.h"
 #include <assert.h>
-#include <stdio.h>
 #include <stdint.h>
 #include <Windows.h>
 #include "Game.h"
 #include "Clock.h"
-//#include <vector>
-#include "Character.h"
+#include <vector>
+#include "Renderable.h"
 #include "PhysicsSystem.h"
 
 std::vector<Physics::PhysicsSystem *> Physics::PhysicsInfo;
-std::vector<Character *> GameCharacters;
+std::vector<Renderable *> GameCharacters;
 void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 {
 	if (i_VKeyID == 'a' || i_VKeyID == 'A')
@@ -141,28 +140,23 @@ void * Game::LoadFile(const char * i_pFilename, size_t & o_sizeFile)
 	return pBuffer;
 }
 
-bool Game::Startup(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lpCmdLine, int i_nCmdShow)
+bool Game::Startup()
 {
-	// IMPORTANT: first we need to initialize GLib
-	bool bSuccess = GLib::Initialize(i_hInstance, i_nCmdShow, "GLibTest", -1, 800, 600);
+	// IMPORTANT (if we want keypress info from GLib): Set a callback for notification of key presses
+	GLib::SetKeyStateChangeCallback(TestKeyCallback);
+	GLib::Sprites::Sprite * pGoodGuy;
+	// Create a couple of sprites using our own helper routine CreateSprite
+	pGoodGuy = CreateSprite("data\\Tracer.dds");
+	// Clock Time
 
-	if (bSuccess)
-	{
-		// IMPORTANT (if we want keypress info from GLib): Set a callback for notification of key presses
-		GLib::SetKeyStateChangeCallback(TestKeyCallback);
-		GLib::Sprites::Sprite * pGoodGuy;
-		// Create a couple of sprites using our own helper routine CreateSprite
-		pGoodGuy = CreateSprite("data\\Tracer.dds");
-		// Clock Time
-		Timing::deltaTime = Timing::Clock::now();
+	Character * tmpGoodGuy = new Character("Byreave", 3, Point2D<float>(0.0f, 150.0f), pGoodGuy);
+	GameCharacters.push_back(tmpGoodGuy);
 
-		Character * tmpGoodGuy = new Character("Byreave", 3, Point2D<float>(0.0f, 150.0f), pGoodGuy);
-		GameCharacters.push_back(tmpGoodGuy);
+	Physics::PhysicsSystem * tmpPhysics = new Physics::PhysicsSystem(tmpGoodGuy);
+	Physics::PhysicsInfo.push_back(tmpPhysics);
+	Timing::deltaTime = Timing::Clock::now();
 
-		Physics::PhysicsSystem * tmpPhysics = new Physics::PhysicsSystem(tmpGoodGuy);
-		Physics::PhysicsInfo.push_back(tmpPhysics);
-	}
-	return bSuccess;
+	return true;
 }
 
 void Game::Run()
@@ -215,6 +209,5 @@ void Game::Shutdown()
 		}
 	}
 	GameCharacters.clear();
-	// IMPORTANT:  Tell GLib to shutdown, releasing resources.
-	GLib::Shutdown();
+
 }
