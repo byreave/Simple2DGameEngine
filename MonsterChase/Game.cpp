@@ -14,8 +14,9 @@
 #include "Renderable.h"
 #include "PhysicsSystem.h"
 
+std::vector<StrongPointer<GameObject>> AllGameObjects;
 std::vector<Physics::PhysicsSystem *> Physics::PhysicsInfo;
-std::vector<Renderable *> GameCharacters;
+std::vector<Render::Renderable *> Render::RenderableInfo;
 void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 {
 	if (i_VKeyID == 'a' || i_VKeyID == 'A')
@@ -148,14 +149,16 @@ bool Game::Startup()
 	// Create a couple of sprites using our own helper routine CreateSprite
 	pGoodGuy = CreateSprite("data\\Tracer.dds");
 	// Clock Time
-
-	Character * tmpGoodGuy = new Character("Byreave", 3, Point2D<float>(0.0f, 150.0f), pGoodGuy);
-	GameCharacters.push_back(tmpGoodGuy);
-
-	Physics::PhysicsSystem * tmpPhysics = new Physics::PhysicsSystem(tmpGoodGuy);
-	Physics::PhysicsInfo.push_back(tmpPhysics);
 	Timing::deltaTime = Timing::Clock::now();
-
+	//Create Game Object
+	StrongPointer<GameObject> spNewPlayer(new GameObject("NewPlayer", 3, Point2D<float>(100.0f, 150.0f)));
+	AllGameObjects.push_back(spNewPlayer);
+	//Physics
+	Physics::PhysicsSystem * tmpPhysics = new Physics::PhysicsSystem(spNewPlayer);
+	Physics::PhysicsInfo.push_back(tmpPhysics);
+	//Renderable
+	Render::Renderable * tmpRenderable = new Render::Renderable(spNewPlayer, pGoodGuy);
+	Render::RenderableInfo.push_back(tmpRenderable);
 	return true;
 }
 
@@ -173,22 +176,12 @@ void Game::Run()
 			float deltaTime = Timing::GetTimeSinceLastCall();
 			//DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
 			Physics::Update(deltaTime);
-			DEBUG_PRINT("Debug", "Character x pos: %f", (*GameCharacters.begin())->GetPosition().getX());
+			DEBUG_PRINT("Debug", "Character x pos: %f", (*AllGameObjects.begin())->GetPosition().getX());
 			// IMPORTANT: Tell GLib that we want to start rendering
 			GLib::BeginRendering();
 			// Tell GLib that we want to render some sprites
 			GLib::Sprites::BeginRendering();
-			
-
-			for (auto renderObj = GameCharacters.begin(); renderObj != GameCharacters.end(); ++renderObj)
-			{
-				Character * c = *renderObj;
-				GLib::Point2D tmpPoint;
-				tmpPoint.x = c->GetPosition().getX();
-				tmpPoint.y = c->GetPosition().getY();
-				GLib::Sprites::RenderSprite(*(c->GetSprite()), tmpPoint, 0.0f);
-
-			}
+			Render::RenderAll();
 			// Tell GLib we're done rendering sprites
 			GLib::Sprites::EndRendering();
 			// IMPORTANT: Tell GLib we're done rendering
@@ -199,15 +192,7 @@ void Game::Run()
 
 void Game::Shutdown()
 {
-	for (auto gameObj = GameCharacters.begin(); gameObj != GameCharacters.end(); ++gameObj)
-	{
-		if(static_cast<Character *>(*gameObj)->GetSprite())
-			GLib::Sprites::Release((*gameObj)->GetSprite());
-		if (*gameObj)
-		{
-			delete *gameObj;
-		}
-	}
-	GameCharacters.clear();
-
+	Physics::CleanUp();
+	Render::CleanUp();
+	AllGameObjects.clear();
 }

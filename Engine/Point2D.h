@@ -34,21 +34,8 @@ namespace Engine {
 		const T getY() const { return _y; }
 
 		const T getMagnitudeSqr() { return _x * _x + _y * _y; }
-		const Point2D<T> getNormalized()
-		{
-			T tmpMag = getMagnitudeSqr();
-			if (tmpMag == 0.0f)
-				return Point2D<T>(0.0f, 0.0f);
-			else
-			{
-				T tmpSqrtMag = sqrtf(tmpMag);
+		const Point2D<T> getNormalized();
 
-				if (tmpSqrtMag == 0)
-					return Point2D<T>(0.0f, 0.0f);
-
-				return Point2D<T>(_x / tmpSqrtMag, _y / tmpSqrtMag);
-			}
-		}
 	private:
 		T _x;
 		T _y;
@@ -134,6 +121,23 @@ namespace Engine {
 	const Point2D<T> Point2D<T>::operator-() const
 	{
 		return Point2D<T>(-_x, -_y);
+	}
+
+	template<typename T>
+	inline const Point2D<T> Point2D<T>::getNormalized()
+	{
+		T tmpMag = getMagnitudeSqr();
+		if (tmpMag == 0.0f)
+			return Point2D<T>(0.0f, 0.0f);
+		else
+		{
+			T tmpSqrtMag = sqrtf(tmpMag);
+
+			if (tmpSqrtMag == 0)
+				return Point2D<T>(0.0f, 0.0f);
+
+			return Point2D<T>(_x / tmpSqrtMag, _y / tmpSqrtMag);
+		}
 	}
 
 	template<typename T>

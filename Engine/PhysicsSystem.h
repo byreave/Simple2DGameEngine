@@ -1,28 +1,33 @@
 #pragma once
 #include "GameObject.h"
 #include <vector>
+#include "SmartPointer.h"
 namespace Physics {
 	class PhysicsSystem {
 	private:
-		GameObject * m_GameObject;
+		WeakPointer<GameObject> m_GameObject;
 		float m_Mass;
 		float m_DragCoef; //Positive
 		Point2D<float> m_Force;
 		Point2D<float> m_Velocity;
 	public:
-		PhysicsSystem(GameObject * i_GameObject)
+		PhysicsSystem(const StrongPointer<GameObject> &  i_GameObject)
 			:
 			m_GameObject(i_GameObject)
 		{
 			m_Mass = 1.0f;
 			m_DragCoef = 0.2f;
 		}
-		PhysicsSystem(GameObject * i_GameObject, float i_Mass, float i_DragCoef)
+		PhysicsSystem(const StrongPointer<GameObject> &  i_GameObject, float i_Mass, float i_DragCoef)
 			:
 			m_GameObject(i_GameObject),
 			m_Mass(i_Mass),
 			m_DragCoef(i_DragCoef)
 		{
+		}
+		~PhysicsSystem()
+		{
+			m_GameObject.~WeakPointer();
 		}
 		void SetMass(const float i_Mass)
 		{
@@ -34,6 +39,7 @@ namespace Physics {
 	};
 	extern std::vector<PhysicsSystem *> PhysicsInfo;
 	void Update(float deltaTime);
+	void CleanUp();
 }
 
 inline void Physics::PhysicsSystem::AddForce(Point2D<float> i_Force)

@@ -152,6 +152,7 @@
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="Point2D-inl.h" />
     <ClInclude Include="Point2D.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="SmartPointer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +161,7 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="SmartPointer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

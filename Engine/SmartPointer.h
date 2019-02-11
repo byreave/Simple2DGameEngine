@@ -16,7 +16,7 @@ namespace Engine {
 
 	// forward declare WeakPointer as we'll refer to it in StrongPointer definition
 	template <class T>
-	class WeakPointers;
+	class WeakPointer;
 
 	template <class T>
 	class StrongPointer
@@ -62,20 +62,34 @@ namespace Engine {
 		// Will create a StrongPointer that points to nullptr if the referenced object has been destroyed (no more Owners left, just Observers)
 		StrongPointer(const WeakPointer<T> & i_other)
 		{
-			//minusCounter();
-			m_pGameObject = i_other.m_pGameObject;
-			m_pRefCounter = i_other.m_pRefCounter;
-			m_pRefCounter->StrongReferences++;
+			if (i_other.m_pRefCounter->StrongReferences > 0)
+			{
+				m_pGameObject = i_other.m_pGameObject;
+				m_pRefCounter = i_other.m_pRefCounter;
+				m_pRefCounter->StrongReferences++;
+			}
+			else
+			{
+				m_pGameObject = nullptr;
+				m_pRefCounter = nullptr;
+			}
 		}
 
 		// Copy Constructor - For creating an Strong Pointer of a polymorphic type from an Weak Pointer
 		template<class U>
 		StrongPointer(const WeakPointer<U> & i_other)
 		{
-			//minusCounter();
-			m_pGameObject = i_other.m_pGameObject;
-			m_pRefCounter = i_other.m_pRefCounter;
-			m_pRefCounter->StrongReferences++;
+			if (i_other.m_pRefCounter->StrongReferences > 0)
+			{
+				m_pGameObject = i_other.m_pGameObject;
+				m_pRefCounter = i_other.m_pRefCounter;
+				m_pRefCounter->StrongReferences++;
+			}
+			else
+			{
+				m_pGameObject = nullptr;
+				m_pRefCounter = nullptr;
+			}
 		}
 
 		// Assignment Operator
@@ -233,7 +247,7 @@ namespace Engine {
 		WeakPointer<T> & operator=(std::nullptr_t i_null);
 
 		// Create an Strong Pointer from this Observering Pointer
-		inline StrongPointer<T> AcquireOwnership();
+		inline StrongPointer<T> AcquireOwnership() const;
 
 		// Equality comparison operators
 		inline bool operator==(const StrongPointer<T> & i_other) const;
@@ -280,7 +294,7 @@ namespace Engine {
 	inline StrongPointer<T>::StrongPointer(T * i_ptr)
 	{
 		m_pGameObject = i_ptr;
-		m_pRefCounter = new ReferenceCounters(0, 0);
+		m_pRefCounter = new ReferenceCounters(1, 0);
 	}
 	template<class T>
 	inline StrongPointer<T>::StrongPointer(const StrongPointer & i_other)
@@ -374,14 +388,9 @@ namespace Engine {
 		return *this;
 	}
 	template<class T>
-	inline StrongPointer<T> WeakPointer<T>::AcquireOwnership()
+	inline StrongPointer<T> WeakPointer<T>::AcquireOwnership() const
 	{
-		if (m_pRefCounter->StrongReferences > 0)
-		{
-			return StrongPointer<T>(m_pGameObject, m_pRefCounter);
-		}
-		else 
-			return StrongPointer<T>(nullptr, nullptr);
+		return StrongPointer<T>(*this);
 	}
 	template<class T>
 	inline bool WeakPointer<T>::operator==(const StrongPointer<T>& i_other) const
