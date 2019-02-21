@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLib", "GLib\GLib.vcxproj", "{B2AB67DE-B7FA-42BA-B060-959487392AEA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua-WinLibs", "Lua\Lua-WinLibs.vcxproj", "{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -45,6 +47,14 @@ Global
 		{B2AB67DE-B7FA-42BA-B060-959487392AEA}.Release|x64.Build.0 = Release|x64
 		{B2AB67DE-B7FA-42BA-B060-959487392AEA}.Release|x86.ActiveCfg = Release|Win32
 		{B2AB67DE-B7FA-42BA-B060-959487392AEA}.Release|x86.Build.0 = Release|Win32
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Debug|x64.ActiveCfg = Debug|x64
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Debug|x64.Build.0 = Debug|x64
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Debug|x86.ActiveCfg = Debug|Win32
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Debug|x86.Build.0 = Debug|Win32
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Release|x64.ActiveCfg = Release|x64
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Release|x64.Build.0 = Release|x64
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Release|x86.ActiveCfg = Release|Win32
+		{BDF98E69-FC1B-4010-B9D7-8DB75E26A245}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

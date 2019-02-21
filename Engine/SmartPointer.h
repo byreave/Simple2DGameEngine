@@ -92,6 +92,12 @@ namespace Engine {
 			}
 		}
 
+		StrongPointer & operator=(std::nullptr_t nullp) const
+		{
+			minusCounter();
+			m_pGameObject = nullptr;
+			m_pRefCounter = nullptr;
+		}
 		// Assignment Operator
 		StrongPointer & operator=(const StrongPointer & i_other);
 
@@ -99,6 +105,15 @@ namespace Engine {
 		template<class U>
 		StrongPointer & operator=(const StrongPointer<U> & i_other)
 		{
+			if (i_other.m_pGameObject == m_pGameObject)
+				return *this;
+			if (i_other.m_pGameObject == nullptr)
+			{
+				minusCounter();
+				m_pGameObject = nullptr;
+				m_pRefCounter = nullptr;
+				return *this;
+			}
 			minusCounter();
 			m_pGameObject = i_other.m_pGameObject;
 			m_pRefCounter = i_other.m_pRefCounter;
@@ -109,6 +124,15 @@ namespace Engine {
 		// Assignment Operator - Reassigns an existing Strong Pointer from an existing Weak Pointer
 		StrongPointer & operator=(const WeakPointer<T> & i_other)
 		{
+			if (i_other.m_pGameObject == m_pGameObject)
+				return *this;
+			if (i_other.m_pGameObject == nullptr)
+			{
+				minusCounter();
+				m_pGameObject = nullptr;
+				m_pRefCounter = nullptr;
+				return *this;
+			}
 			minusCounter();
 			m_pGameObject = i_other.m_pGameObject;
 			m_pRefCounter = i_other.m_pRefCounter;
@@ -120,6 +144,15 @@ namespace Engine {
 		template<class U>
 		StrongPointer & operator=(const WeakPointer<U> & i_other)
 		{
+			if (i_other.m_pGameObject == m_pGameObject)
+				return *this;
+			if (i_other.m_pGameObject == nullptr)
+			{
+				minusCounter();
+				m_pGameObject = nullptr;
+				m_pRefCounter = nullptr;
+				return *this;
+			}
 			minusCounter();
 			m_pGameObject = i_other.m_pGameObject;
 			m_pRefCounter = i_other.m_pRefCounter;
@@ -132,9 +165,15 @@ namespace Engine {
 		// BasePtr = new Base();
 		StrongPointer & operator=(T * i_ptr)
 		{
+			if (m_pGameObject == i_ptr)
+				return *this;
+
 			minusCounter();
 			m_pGameObject = i_ptr;
-			m_pRefCounter = new ReferenceCounters(1, 0);
+			if (i_ptr == nullptr)
+				m_pRefCounter = nullptr;
+			else
+				m_pRefCounter = new ReferenceCounters(1, 0);
 			return *this;
 		}
 
@@ -186,7 +225,10 @@ namespace Engine {
 		inline bool operator==(U * i_ptr) const;
 
 		// Equality comparison operator for nullptr
-		inline bool operator==(std::nullptr_t nullp) const;
+		inline bool operator==(std::nullptr_t nullp) const
+		{
+			return m_pGameObject == nullptr;
+		}
 
 		// Inequality comparison operator directly to pointer 
 		inline bool operator!=(T * i_ptr) const;
@@ -318,8 +360,15 @@ namespace Engine {
 	template<class T>
 	inline StrongPointer<T> & StrongPointer<T>::operator=(const StrongPointer & i_other)
 	{
-		if (m_pGameObject == i_other.m_pGameObject)
+		if (i_other.m_pGameObject == m_pGameObject)
 			return *this;
+		if (i_other.m_pGameObject == nullptr)
+		{
+			minusCounter();
+			m_pGameObject = nullptr;
+			m_pRefCounter = nullptr;
+			return *this;
+		}
 		minusCounter();
 		m_pGameObject = i_other.m_pGameObject;
 		m_pRefCounter = i_other.m_pRefCounter;
