@@ -411,6 +411,8 @@ namespace Engine {
 	template<class T>
 	inline WeakPointer<T> & WeakPointer<T>::operator=(const WeakPointer & i_other)
 	{
+		if (i_other->m_pGameObject == m_pGameObject)
+			return *this;
 		m_pGameObject = i_other.m_pGameObject;
 		m_pRefCounter = i_other.m_pRefCounter;
 		m_pRefCounter->WeakReferences++;
@@ -421,7 +423,7 @@ namespace Engine {
 	inline WeakPointer<T> & WeakPointer<T>::operator=(const StrongPointer<U>& i_other)
 	{
 		if (m_pRefCounter != nullptr)
-			m_pRefCounter--;
+			m_pRefCounter->WeakReferences --;
 		m_pRefCounter = i_other.m_pRefCounter;
 		m_pRefCounter->WeakReferences++;
 		m_pGameObject = i_other.m_pGameObject;
@@ -431,7 +433,7 @@ namespace Engine {
 	inline WeakPointer<T>& WeakPointer<T>::operator=(std::nullptr_t i_null)
 	{
 		if (m_pRefCounter != nullptr)
-			m_pRefCounter--;
+			m_pRefCounter->WeakReferences--;
 		m_pRefCounter = nullptr;
 		m_pGameObject = nullptr;
 		return *this;
