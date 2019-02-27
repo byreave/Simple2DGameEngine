@@ -3,6 +3,7 @@
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
+
 #endif // _DEBUG
 #include "ConsoleLog.h"
 #include <assert.h>
@@ -69,7 +70,6 @@ GLib::Sprites::Sprite * Game::CreateSprite(const char * i_pFilename)
 	// probably need some debug logging in here!!!!
 	if (pTextureFile)
 	{
-		DEBUG_PRINT("ERROR: ", "Empty image file!\n");
 		delete[] pTextureFile;
 	}
 
@@ -176,7 +176,7 @@ void Game::Run()
 			float deltaTime = Timing::GetTimeSinceLastCall();
 			//DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
 			Physics::Update(deltaTime);
-			DEBUG_PRINT("Debug", "Character x pos: %f", (*AllGameObjects.begin())->GetPosition().getX());
+			//DEBUG_PRINT("Debug", "Character x pos: %f", (*AllGameObjects.begin())->GetPosition().getX());
 			// IMPORTANT: Tell GLib that we want to start rendering
 			GLib::BeginRendering();
 			// Tell GLib that we want to render some sprites
