@@ -21,4 +21,5 @@ void Render::CleanUp()
 		Renderable * ren = *it;
 		delete ren;
 	}
+	RenderableInfo.~vector();
 }

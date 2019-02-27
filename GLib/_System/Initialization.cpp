@@ -21,7 +21,7 @@ namespace GLib
 #ifdef  UNICODE
 		const size_t		lenWindowName = 128;
 		wchar_t				WindowName[lenWindowName];
-		
+
 		MultiByteToWideChar( CP_ACP, 0, ( i_pWindowName ) ? i_pWindowName : "GLib Render", -1, WindowName, lenWindowName );
 
 		LPCTSTR pWindowName = WindowName;
@@ -30,6 +30,7 @@ namespace GLib
 #endif // UNICODE
 
 		g_hWnd = _CreateWindow( WndProc, g_hInstance, i_IconID, pWindowName, i_WindowWidth, i_WindowHeight );
+
 		if( g_hWnd == nullptr )
 		{
 			DEBUG_PRINT( "_CreateWindow() failed.\n" );
@@ -37,6 +38,7 @@ namespace GLib
 		}
 
 		HRESULT hResult = CreateDevice( g_hWnd );
+
 		if( !Succeeded( hResult ) )
 		{
 			DEBUG_PRINT( "_CreateDevice() failed. HRESULT = %d.\n", hResult );
@@ -47,6 +49,8 @@ namespace GLib
 
 		Input::Initialize();
 		Sprites::Initialize();
+
+
 		return true;
 	}
 

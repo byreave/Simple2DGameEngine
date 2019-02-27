@@ -30,4 +30,5 @@ void Physics::CleanUp()
 		PhysicsSystem * pPhysicsSystem = *phyInfo;
 		delete pPhysicsSystem;
 	}
+	PhysicsInfo.~vector();
 }

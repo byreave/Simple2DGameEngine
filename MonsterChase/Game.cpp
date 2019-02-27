@@ -13,6 +13,7 @@
 std::vector<StrongPointer<GameObject>> AllGameObjects;
 std::vector<Physics::PhysicsSystem *> Physics::PhysicsInfo;
 std::vector<Render::Renderable *> Render::RenderableInfo;
+
 void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 {
 	if (i_VKeyID == 'a' || i_VKeyID == 'A')
@@ -190,4 +191,5 @@ void Game::Shutdown()
 	Physics::CleanUp();
 	Render::CleanUp();
 	AllGameObjects.clear();
+	AllGameObjects.~vector();
 }
