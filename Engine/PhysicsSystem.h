@@ -27,7 +27,6 @@ namespace Physics {
 		}
 		~PhysicsSystem()
 		{
-			m_GameObject.~WeakPointer();
 		}
 		void SetMass(const float i_Mass)
 		{

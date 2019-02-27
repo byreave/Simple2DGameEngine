@@ -19,7 +19,6 @@ namespace Render
 		}
 		~Renderable()
 		{
-			m_Gameobject.~WeakPointer();
 			GLib::Sprites::Release(m_Sprite);
 		}
 
