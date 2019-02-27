@@ -1,10 +1,5 @@
 #include<iostream>
 #include<stdlib.h> //random
-#ifdef _DEBUG
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-
-#endif // _DEBUG
 #include "ConsoleLog.h"
 #include <assert.h>
 #include <stdint.h>
