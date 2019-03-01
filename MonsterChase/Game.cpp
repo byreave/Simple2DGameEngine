@@ -9,6 +9,7 @@
 #include <vector>
 #include "Renderable.h"
 #include "PhysicsSystem.h"
+#include "LuaCreateGO.h"
 
 std::vector<StrongPointer<GameObject>> AllGameObjects;
 std::vector<Physics::PhysicsSystem *> Physics::PhysicsInfo;
@@ -139,6 +140,7 @@ void * Game::LoadFile(const char * i_pFilename, size_t & o_sizeFile)
 
 bool Game::Startup()
 {
+	Engine::TestLua("data\\player.lua");
 	// IMPORTANT (if we want keypress info from GLib): Set a callback for notification of key presses
 	GLib::SetKeyStateChangeCallback(TestKeyCallback);
 	GLib::Sprites::Sprite * pGoodGuy;
