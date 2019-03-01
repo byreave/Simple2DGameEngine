@@ -1,80 +1,15 @@
 #pragma once
+#include "Engine.h"
 #include "GameObject.h"
 #include "SmartPointer.h"
 #include "lua.hpp"
 #include "ConsoleLog.h"
 #include <assert.h>
+
+
 namespace Engine {
 
-	void * LoadFile(const char * i_pFilename, size_t & o_sizeFile)
-	{
-		assert(i_pFilename != NULL);
-
-		FILE * pFile = NULL;
-
-		errno_t fopenError = fopen_s(&pFile, i_pFilename, "rb");
-		if (fopenError != 0)
-		{
-			DEBUG_PRINT("ERROR: ", "File Open Error!\n");
-			return NULL;
-		}
-
-		assert(pFile != NULL);
-
-		int FileIOError = fseek(pFile, 0, SEEK_END);
-		assert(FileIOError == 0);
-
-		long FileSize = ftell(pFile);
-		assert(FileSize >= 0);
-
-		FileIOError = fseek(pFile, 0, SEEK_SET);
-		assert(FileIOError == 0);
-
-		uint8_t * pBuffer = new uint8_t[FileSize];
-		assert(pBuffer);
-
-		size_t FileRead = fread(pBuffer, 1, FileSize, pFile);
-		assert(FileRead == FileSize);
-
-		fclose(pFile);
-
-		o_sizeFile = FileSize;
-
-		return pBuffer;
-	}
-	//StrongPointer<GameObject> CreateGameObject(const char * luaScript)
-	//{
-	//	lua_State * pLuaState = luaL_newstate();
-	//	assert(pLuaState);
-
-	//	luaL_openlibs(pLuaState);
-	//	size_t 		sizeFile = 0;
-	//	uint8_t * 	pFileContents = static_cast<uint8_t *>(LoadFile(luaScript, sizeFile));
-
-	//	if (pFileContents  && sizeFile)
-	//	{
-	//		int 		result = 0;
-
-	//		// Necessary stuff to process our data
-	//		result = luaL_loadbuffer(
-	//			pLuaState, reinterpret_cast<char *>(pFileContents), sizeFile, nullptr);
-	//		assert(result == 0);
-
-	//		result = lua_pcall(pLuaState, 0, 0, 0);
-	//		assert(result == 0);
-	//	}
-	//	int result = lua_getglobal(pLuaState, "Player");
-	//	assert(result == LUA_TNIL || result == LUA_TTABLE);
-	//	if (result == LUA_TTABLE)
-	//	{
-	//		lua_pushstring(pLuaState, "name");
-	//		DEBUG_PRINT("Msg", "LUA gets name : %f", static_cast<float>(lua_tonumber(pLuaState, -2)));
-	//		lua_pop(pLuaState, 1);
-	//	}
-	//	return NULL;
-	//}
-
-	void TestLua(const char * luaScript)
+	void CreateGO(const char * luaScript)
 	{
 		lua_State * pLuaState = luaL_newstate();
 		assert(pLuaState);
@@ -98,24 +33,98 @@ namespace Engine {
 
 		int result = lua_getglobal(pLuaState, "Player");
 		assert(result == LUA_TNIL || result == LUA_TTABLE);
+		
 		if (result == LUA_TTABLE)
 		{
+			//init data
+			Point2D<float> initPos(0.0f, 0.0f);
+			char * name;
+			int initLives = 3;
 			// get name
 			lua_pushstring(pLuaState, "name");
 			int type = lua_gettable(pLuaState, -2);
 			assert(type == LUA_TSTRING);
-			char * name = _strdup(lua_tostring(pLuaState, -1));
+			name = _strdup(lua_tostring(pLuaState, -1));
+			lua_pop(pLuaState, 1);
+			//get initial lives
+			lua_pushstring(pLuaState, "initial_lives");
+			type = lua_gettable(pLuaState, -2);
+			assert(type == LUA_TNUMBER);
+			initLives = static_cast<int>(lua_tonumber(pLuaState, -1));
 			lua_pop(pLuaState, 1);
 			//get initial position
 			lua_pushstring(pLuaState, "initial_position");
 			type = lua_gettable(pLuaState, -2);
-			assert(type == LUA_TTABLE);
-			lua_pushinteger(pLuaState, 0);
-			type = lua_gettable(pLuaState, -2);
-			assert(type == LUA_TNUMBER);
+			assert(result == LUA_TNIL || result == LUA_TTABLE);
 
-			DEBUG_PRINT("msg", "Integer from table %f.", static_cast<float>(lua_tonumber(pLuaState, -1)));
+			float init_pos[2];
+			size_t i = 0;
+			lua_pushnil(pLuaState);
+			while (lua_next(pLuaState, -2) != 0)
+			{
+				init_pos[i] = static_cast<float>(lua_tonumber(pLuaState, -1));
+				DEBUG_PRINT("msg", "Integer from table %f.", init_pos[i]);
+				i++;
+				lua_pop(pLuaState, 1);
+			}
+			lua_pop(pLuaState, 1);
+			initPos.setX(init_pos[0]);
+			initPos.setY(init_pos[1]);
+			
+			//Create game object
+			auto spNewPlayer = StrongPointer<GameObject>(new GameObject(name, initLives, initPos));
+			delete name;
+			AllGameObjects.push_back(spNewPlayer);
+			//get physics setting
+			lua_pushstring(pLuaState, "physics_settings");
+			type = lua_gettable(pLuaState, -2);
+			assert(type == LUA_TNIL || type == LUA_TTABLE);
+			if (result == LUA_TTABLE)
+			{
+				float mass = 2.0f, drag = 0.0f;
+				//mass
+				lua_pushstring(pLuaState, "mass");
+				type = lua_gettable(pLuaState, -2);
+				assert(type == LUA_TNUMBER);
+				mass = static_cast<float>(lua_tonumber(pLuaState, -1));
+				//DEBUG_PRINT("MSG", "STRING IN PHYSICS %f", lua_tonumber(pLuaState, -1));
+				lua_pop(pLuaState, 1);
+
+				//drag
+				lua_pushstring(pLuaState, "drag");
+				type = lua_gettable(pLuaState, -2);
+				assert(type == LUA_TNUMBER);
+				drag = static_cast<float>(lua_tonumber(pLuaState, -1));
+				lua_pop(pLuaState, 1);
+				Physics::PhysicsSystem * tmpPhysics = new Physics::PhysicsSystem(spNewPlayer, mass, drag);
+				Physics::PhysicsInfo.push_back(tmpPhysics);
+			}
+			lua_pop(pLuaState, 1);
+
+			//render
+			lua_pushstring(pLuaState, "render_settings");
+			type = lua_gettable(pLuaState, -2);
+			assert(type == LUA_TNIL || type == LUA_TTABLE);
+			if (result == LUA_TTABLE)
+			{
+				char * sprite;
+				//mass
+				lua_pushstring(pLuaState, "sprite");
+				type = lua_gettable(pLuaState, -2);
+				assert(type == LUA_TSTRING);
+				sprite = _strdup(lua_tostring(pLuaState, -1));
+				DEBUG_PRINT("MSG", "STRING IN RENDER %s", sprite);
+				lua_pop(pLuaState, 1);
+
+				auto pGoodGuy = Engine::CreateSprite(sprite);
+				Render::Renderable * tmpRenderable = new Render::Renderable(spNewPlayer, pGoodGuy);
+				delete sprite;
+				Render::RenderableInfo.push_back(tmpRenderable);
+			}
+			lua_pop(pLuaState, 1);
 		}
+		lua_close(pLuaState);
+		delete pFileContents;
 	}
-	
+
 }

@@ -10,11 +10,6 @@ Player =
    },
 
    render_settings = {
-      sprite = { 
-         offset = { 0.0, 0.0 },
-         -- left, top, right, bottom
-         extents = { -1.0, -1.0, 1.0, 1.0 }
-      },
-      sprite_color = { 255, 255, 255, 255 }
+      sprite = "data\\Tracer.dds"
    }
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "Point2D.h"
+#include <vector>
 #include <string.h>
+#include "SmartPointer.h"
 using namespace Engine;
 class GameObject
 {
@@ -25,4 +27,6 @@ public:
 	void SetPosition(float x, float y) { m_pos.setX(x); m_pos.setY(y); }
 
 };
+
+extern std::vector<StrongPointer<GameObject>> AllGameObjects;
 
