@@ -161,6 +161,7 @@
     <ClCompile Include="ConsoleLog.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="LuaCreateGO.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="SmartPointer.cpp" />
