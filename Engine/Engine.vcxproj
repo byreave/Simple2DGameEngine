@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Lua/src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Lua\src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>d3d11.lib;GLib_$(PlatformTarget)-$(Configuration).lib;Lua-5.3.2.lib</AdditionalDependencies>
@@ -98,7 +98,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Lua/src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Lua\src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>d3d11.lib;GLib_$(PlatformTarget)-$(Configuration).lib;Lua-5.3.2.lib</AdditionalDependencies>
@@ -113,7 +113,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Lua/src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Lua\src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -132,7 +132,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Lua/src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Lua\src;$(SolutionDir)Glib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
