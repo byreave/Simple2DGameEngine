@@ -8,8 +8,9 @@ void Physics::PhysicsSystem::Update(float deltaTime)
 	//m_Force -= m_Velocity.getNormalized() * m_Velocity.getMagnitudeSqr() * m_DragCoef;
 	DEBUG_PRINT("DBG", "drag x: %f, drag y: %f", drag.getX(), drag.getY());
 	m_Velocity = m_Velocity + ((m_Force + drag) / m_Mass) * deltaTime / 2.0f;
-	Point2D<float> newPos = m_GameObject->GetPosition() + m_Velocity * deltaTime;
-	m_GameObject->SetPosition(newPos);
+	auto sp = m_GameObject.AcquireOwnership();
+	Point2D<float> newPos = sp->GetPosition() + m_Velocity * deltaTime;
+	sp->SetPosition(newPos);
 
 	//m_Force = Point2D<float>(0.0f, 0.0f);
 	//Update Drag
