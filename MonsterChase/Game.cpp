@@ -27,7 +27,7 @@ void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
 			{
 				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(-100.0f, 0.0f);
+				p->AddForce(-1.0f, 0.0f);
 			}
 		}
 		
@@ -40,7 +40,7 @@ void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
 			{
 				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(100.0f, 0.0f);
+				p->AddForce(1.0f, 0.0f);
 			}
 		}
 	}

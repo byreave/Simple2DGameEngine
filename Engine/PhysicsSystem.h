@@ -15,7 +15,7 @@ namespace Physics {
 			m_GameObject(i_GameObject)
 		{
 			m_Mass = 1.0f;
-			m_DragCoef = 0.2f;
+			m_DragCoef = 0.02f;
 		}
 		PhysicsSystem(Actor * i_GameObject, float i_Mass, float i_DragCoef)
 			:
@@ -38,10 +38,10 @@ namespace Physics {
 
 inline void Physics::PhysicsSystem::AddForce(Point2D<float> i_Force)
 {
-	m_Force += i_Force;
+	m_Force = i_Force;
 }
 
 inline void Physics::PhysicsSystem::AddForce(float i_xForce, float i_yForce)
 {
-	m_Force += Point2D<float>(i_xForce, i_yForce);
+	m_Force = Point2D<float>(i_xForce, i_yForce);
 }
