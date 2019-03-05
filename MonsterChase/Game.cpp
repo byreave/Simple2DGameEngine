@@ -26,7 +26,15 @@ void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 				p->AddForce(-100.0f, 0.0f);
 			}
 		}
-		
+		else
+		{
+			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
+			{
+				Physics::PhysicsSystem * p = *phy;
+				p->AddForce(100.0f, 0.0f);
+			}
+		}
+
 	}
 	else if (i_VKeyID == 'd' || i_VKeyID == 'D')
 	{
@@ -37,6 +45,14 @@ void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 			{
 				Physics::PhysicsSystem * p = *phy;
 				p->AddForce(100.0f, 0.0f);
+			}
+		}
+		else
+		{
+			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
+			{
+				Physics::PhysicsSystem * p = *phy;
+				p->AddForce(-100.0f, 0.0f);
 			}
 		}
 	}
@@ -62,17 +78,17 @@ bool Game::Startup()
 }
 
 void Game::Run()
-{  
+{
 	bool bQuit = false;
 
 	do
 	{
-		// IMPORTANT: We need to let GLib do it's thing. 
+		// IMPORTANT: We need to let GLib do it's thing.
 		GLib::Service(bQuit);
 
 		if (!bQuit)
 		{
-			float deltaTime = Timing::GetTimeSinceLastCall();
+			float deltaTime = Timing::GetTimeSinceLastCall() / 1000.0f;
 			//DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
 			Physics::Update(deltaTime);
 			//DEBUG_PRINT("Debug", "Character x pos: %f", (*AllGameObjects.begin())->GetPosition().getX());

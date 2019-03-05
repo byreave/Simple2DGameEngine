@@ -16,7 +16,7 @@ namespace Physics {
 			m_GameObject(i_GameObject)
 		{
 			m_Mass = 1.0f;
-			m_DragCoef = 0.2f;
+			m_DragCoef = 0.02f;
 		}
 		PhysicsSystem(const StrongPointer<GameObject> &  i_GameObject, float i_Mass, float i_DragCoef)
 			:

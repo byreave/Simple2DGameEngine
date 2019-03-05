@@ -1,17 +1,17 @@
 #include "PhysicsSystem.h"
-
+#include "ConsoleLog.h"
 
 //Midpoint Method
 void Physics::PhysicsSystem::Update(float deltaTime)
 {
-	m_Force -= m_Velocity.getNormalized() * m_Velocity.getMagnitudeSqr() * m_DragCoef;
+	Point2D<float> drag = - m_Velocity.getNormalized() * m_Velocity.getMagnitudeSqr() * m_DragCoef;
+	//m_Force -= m_Velocity.getNormalized() * m_Velocity.getMagnitudeSqr() * m_DragCoef;
+	DEBUG_PRINT("DBG", "drag x: %f, drag y: %f", drag.getX(), drag.getY());
+	m_Velocity = m_Velocity + ((m_Force + drag) / m_Mass) * deltaTime / 2.0f;
+	Point2D<float> newPos = m_GameObject->GetPosition() + m_Velocity * deltaTime;
+	m_GameObject->SetPosition(newPos);
 
-	m_Velocity = m_Velocity + (m_Force / m_Mass) * deltaTime / 2.0f;
-	auto spGameObject = m_GameObject.AcquireOwnership();
-	Point2D<float> newPos = spGameObject->GetPosition() + m_Velocity * deltaTime;
-	spGameObject->SetPosition(newPos);
-
-	m_Force = Point2D<float>(0.0f, 0.0f);
+	//m_Force = Point2D<float>(0.0f, 0.0f);
 	//Update Drag
 }
 
