@@ -38,10 +38,10 @@ namespace Physics {
 
 inline void Physics::PhysicsSystem::AddForce(Point2D<float> i_Force)
 {
-	m_Force = i_Force;
+	m_Force += i_Force;
 }
 
 inline void Physics::PhysicsSystem::AddForce(float i_xForce, float i_yForce)
 {
-	m_Force = Point2D<float>(i_xForce, i_yForce);
+	m_Force += Point2D<float>(i_xForce, i_yForce);
 }

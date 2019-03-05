@@ -27,7 +27,15 @@ void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
 			{
 				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(-1.0f, 0.0f);
+				p->AddForce(-100.0f, 0.0f);
+			}
+		}
+		else
+		{
+			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
+			{
+				Physics::PhysicsSystem * p = *phy;
+				p->AddForce(100.0f, 0.0f);
 			}
 		}
 		
@@ -40,7 +48,15 @@ void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
 			{
 				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(1.0f, 0.0f);
+				p->AddForce(100.0f, 0.0f);
+			}
+		}
+		else
+		{
+			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
+			{
+				Physics::PhysicsSystem * p = *phy;
+				p->AddForce(-100.0f, 0.0f);
 			}
 		}
 	}
@@ -176,10 +192,10 @@ void Game::Run()
 
 		if (!bQuit)
 		{
-			float deltaTime = Timing::GetTimeSinceLastCall();
+			float deltaTime = Timing::GetTimeSinceLastCall() / 1000.0f;
 			//DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
 			Physics::Update(deltaTime);
-			DEBUG_PRINT("Debug", "Character x pos: %f", (*GameCharacters.begin())->GetPosition().getX());
+			//DEBUG_PRINT("Debug", "Character x pos: %f", (*GameCharacters.begin())->GetPosition().getX());
 			// IMPORTANT: Tell GLib that we want to start rendering
 			GLib::BeginRendering();
 			// Tell GLib that we want to render some sprites
