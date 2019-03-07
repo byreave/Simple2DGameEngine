@@ -1,5 +1,5 @@
 #include "Matrix4f.h"
-
+#include "Vector4.h"
 
 Matrix4f Matrix4f::operator/(float rhs) const
 {
@@ -192,6 +192,15 @@ Matrix4f Matrix4f::operator * (float rhs) const
 		result[i] = m_Mat[i] * rhs;
 	}
 	return Matrix4f(result);
+}
+Vector4 Matrix4f::operator*(const Vector4 & rhs)
+{
+	return Vector4(
+		m_Mat[0] * rhs.x() + m_Mat[1] * rhs.y() + m_Mat[2] * rhs.z() + m_Mat[3] * rhs.w(),
+		m_Mat[4] * rhs.x() + m_Mat[5] * rhs.y() + m_Mat[6] * rhs.z() + m_Mat[7] * rhs.w(),
+		m_Mat[8] * rhs.x() + m_Mat[9] * rhs.y() + m_Mat[10] * rhs.z() + m_Mat[11] * rhs.w(),
+		m_Mat[12] * rhs.x() +m_Mat[13] * rhs.y() + m_Mat[14] * rhs.z() + m_Mat[15] * rhs.w()
+	);
 }
 Matrix4f operator*(float lhs, const Matrix4f & rhs)
 {

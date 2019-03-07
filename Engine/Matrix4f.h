@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "ConsoleLog.h"
+class Vector4;
 class Matrix4f
 {
 public:
@@ -16,6 +17,7 @@ public:
     float operator()(unsigned int _row, unsigned int _col) const;
 	Matrix4f operator * (const Matrix4f & rhs) const;
 	Matrix4f operator * (float rhs) const;
+	Vector4 operator * (const Vector4 & rhs);
 
 	Matrix4f operator / (float rhs) const;
 	Matrix4f operator + (const Matrix4f & rhs) const;
@@ -23,6 +25,8 @@ public:
 
 	Matrix4f Inverse() const;
 	Matrix4f Transpose() const;
+
+	static Matrix4f Identity();
 
 private:
 	float m_Mat[16];
@@ -100,4 +104,9 @@ inline float Matrix4f::operator()(unsigned int _row, unsigned int _col) const
 		DEBUG_PRINT("Error", "Row or col out of bounds!");
 	}
 	return m_Mat[4 * _row + _col];
+}
+
+inline Matrix4f Matrix4f::Identity()
+{
+	return Matrix4f(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 }
