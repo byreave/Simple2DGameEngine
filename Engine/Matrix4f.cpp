@@ -178,10 +178,10 @@ Matrix4f Matrix4f::operator * (const Matrix4f & rhs) const
 	{
 		for (int _col = 0; _col < 4; ++_col)
 		{
-			result[_row * 4 + _col] = 
+			result[4 * _row + _col] = m_Mat[4 * _row] * rhs.m_Mat[_col] + m_Mat[4 * _row + 1] * rhs.m_Mat[_col + 4] + m_Mat[4 * _row + 2] * rhs.m_Mat[_col + 8] + m_Mat[4 * _row + 3] * rhs.m_Mat[_col + 12];
 		}
 	}
-	return Matrix4f();
+	return Matrix4f(result);
 
 }
 Matrix4f Matrix4f::operator * (float rhs) const

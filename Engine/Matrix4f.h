@@ -5,6 +5,7 @@ class Matrix4f
 {
 public:
 	Matrix4f(); //default
+	Matrix4f(float i00, float i01, float i02, float i03, float i10, float i11, float i12, float i13, float i20, float i21, float i22, float i23, float i30, float i31, float i32, float i33);
 	Matrix4f(float * data); //with data
 	Matrix4f(const Matrix4f & m); //copy
 	Matrix4f & operator= (const Matrix4f& m); //assign
@@ -34,6 +35,26 @@ inline Matrix4f::Matrix4f()
 	{
 		m_Mat[i] = 0.0f;
 	}
+}
+
+inline Matrix4f::Matrix4f(float i00, float i01, float i02, float i03, float i10, float i11, float i12, float i13, float i20, float i21, float i22, float i23, float i30, float i31, float i32, float i33)
+{
+	m_Mat[0] = i00;
+	m_Mat[1] = i01;
+	m_Mat[2] = i02;
+	m_Mat[3] = i03;
+	m_Mat[4] = i10;
+	m_Mat[5] = i11;
+	m_Mat[6] = i12;
+	m_Mat[7] = i13;
+	m_Mat[8] = i20;
+	m_Mat[9] = i21;
+	m_Mat[10] = i22;
+	m_Mat[11] = i23;
+	m_Mat[12] = i30;
+	m_Mat[13] = i31;
+	m_Mat[14] = i32;
+	m_Mat[15] = i33;
 }
 
 inline Matrix4f::Matrix4f(float * data)
