@@ -7,7 +7,7 @@
 #include "Renderable.h"
 #include "PhysicsSystem.h"
 #include "LuaCreateGO.h"
-
+#include "MatrixVector4Unittest.h"
 
 std::vector<StrongPointer<GameObject>> AllGameObjects;
 std::vector<Physics::PhysicsSystem *> Physics::PhysicsInfo;
@@ -65,10 +65,9 @@ void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
 #endif // __DEBUG
 }
 
-
-
 bool Game::Startup()
 {
+	Unittest_Matrix_Vector();
 	Engine::CreateGO("data\\player.lua");
 	// IMPORTANT (if we want keypress info from GLib): Set a callback for notification of key presses
 	GLib::SetKeyStateChangeCallback(TestKeyCallback);

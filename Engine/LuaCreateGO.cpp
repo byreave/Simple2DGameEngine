@@ -31,7 +31,7 @@ void Engine::CreateGO(const char * luaScript)
 	}
 
 	int result = lua_getglobal(pLuaState, "Player");
-	assert(result == LUA_TNIL || result == LUA_TTABLE);
+	assert(result == LUA_TTABLE);
 
 	if (result == LUA_TTABLE)
 	{
