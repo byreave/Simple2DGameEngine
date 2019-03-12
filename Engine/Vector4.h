@@ -21,6 +21,7 @@ public:
 	Vector4 operator / (float rhs) const;
 	Vector4 operator * (const Matrix4f & rhs);
 
+	void Show();
 
 	float & x() { return _x; }
 	float & y() { return _y; }

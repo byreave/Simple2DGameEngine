@@ -27,6 +27,12 @@ public:
 	Matrix4f Transpose() const;
 
 	static Matrix4f Identity();
+	static Matrix4f GetTransformMatrix(float x, float y, float z);
+	static Matrix4f GetRotationMatrixX(float eulerAngle);
+	static Matrix4f GetRotationMatrixY(float eulerAngle);
+	static Matrix4f GetRotationMatrixZ(float eulerAngle);
+
+	void Show() const;
 
 private:
 	float m_Mat[16];

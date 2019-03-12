@@ -1,5 +1,9 @@
 #include "Matrix4f.h"
 #include "Vector4.h"
+#include "ConsoleLog.h"
+#include <math.h>
+
+#define PI 3.141593
 
 Matrix4f Matrix4f::operator/(float rhs) const
 {
@@ -205,4 +209,49 @@ Vector4 Matrix4f::operator*(const Vector4 & rhs)
 Matrix4f operator*(float lhs, const Matrix4f & rhs)
 {
 	return rhs * lhs;
+}
+
+Matrix4f Matrix4f::GetTransformMatrix(float x, float y, float z)
+{
+	return Matrix4f(
+		1.0f, 0.0f, 0.0f, x,
+		0.0f, 1.0f, 0.0f, y,
+		0.0f, 0.0f, 1.0f, z,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+}
+
+Matrix4f Matrix4f::GetRotationMatrixX(float eulerAngle)
+{
+	return Matrix4f(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, cos(eulerAngle / PI), -sin(eulerAngle / PI), 0.0f,
+		0.0f, sin(eulerAngle / PI), cos(eulerAngle / PI), 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+}
+
+Matrix4f Matrix4f::GetRotationMatrixY(float eulerAngle)
+{
+	return Matrix4f(
+		cos(eulerAngle / PI), 0.0f, sin(eulerAngle / PI), 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		-sin(eulerAngle / PI), 0.0f, cos(eulerAngle / PI), 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+}
+
+Matrix4f Matrix4f::GetRotationMatrixZ(float eulerAngle)
+{
+	return Matrix4f(
+		cos(eulerAngle / PI), -sin(eulerAngle / PI), 0.0f, 0.0f,
+		sin(eulerAngle / PI), cos(eulerAngle / PI), 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+}
+
+void Matrix4f::Show() const
+{
+	DEBUG_PRINT("Matrix Info", "\n[%f, %f, %f, %f]\n[%f, %f, %f, %f]\n[%f, %f, %f, %f]\n[%f, %f, %f, %f]\n", m_Mat[0], m_Mat[1], m_Mat[2], m_Mat[3], m_Mat[4], m_Mat[5], m_Mat[6], m_Mat[7], m_Mat[8], m_Mat[9], m_Mat[10], m_Mat[11], m_Mat[12], m_Mat[13], m_Mat[14], m_Mat[15]);
 }
