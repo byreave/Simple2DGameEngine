@@ -48,7 +48,7 @@ namespace Engine {
 	template<typename T>
 	inline const Point2D<T> Point2D<T>::operator-(const Point2D<T>& other) const
 	{
-		return Point2D<T>(other._x - _x, other._y - _y);
+		return Point2D<T>(_x - other._x, _y - other._y);
 	}
 
 	template<typename T>
@@ -146,6 +146,3 @@ namespace Engine {
 		return _x == other._x && _y == other._y;
 	}
 }
-
-#include "Point2D-inl.h"
-

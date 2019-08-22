@@ -3,6 +3,9 @@
 #include "Vector4.h"
 void Unittest_Matrix_Vector()
 {
+	Vector4 vecA(1.0f, 0.0f, 3.0f, 0.0f);
+	Vector4 vecB(0.0f, 2.0f, 0.0f, 4.0f);
+
 	Matrix4f testmatA(
 		1.0f, 1.0f, 1.0f, 0.0f,
 		2.0f, 3.0f, 2.0f, 1.0f,
@@ -17,7 +20,16 @@ void Unittest_Matrix_Vector()
 	);
 
 	Vector4 testvecA(1.0f, 2.0f, 3.0f, 4.0f);
-	testmatA.Show();
+	Vector4 vecC = testvecA * testmatA;
+	vecC.Show();
+	vecC = testmatA * testvecA;
+	vecC.Show();
+	//testvecA = testmatA * testvecA;
+	(testmatA * testmatB).Show();
+	(testmatA.MultiplySSE(testmatB)).Show();
+	testmatA.Inverse().Show();
+	testmatA.InverseSSE().Show();
+	//testvecA.Show();
 
 	//add
 	(testmatA + testmatB).Show();

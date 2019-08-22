@@ -97,6 +97,7 @@ namespace Engine {
 			minusCounter();
 			m_pGameObject = nullptr;
 			m_pRefCounter = nullptr;
+			return *this;
 		}
 		// Assignment Operator
 		StrongPointer & operator=(const StrongPointer & i_other);

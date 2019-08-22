@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <xmmintrin.h>
+#include <intrin.h>
 #include "ConsoleLog.h"
 class Vector4;
 class Matrix4f
@@ -16,16 +18,21 @@ public:
 	float & operator()(unsigned int _row, unsigned int _col);
     float operator()(unsigned int _row, unsigned int _col) const;
 	Matrix4f operator * (const Matrix4f & rhs) const;
+	Matrix4f MultiplySSE(const Matrix4f & rhs) const;
 	Matrix4f operator * (float rhs) const;
 	Vector4 operator * (const Vector4 & rhs);
+	__m128 Rows(int i) const { return m_rows[i]; }
 
 	Matrix4f operator / (float rhs) const;
 	Matrix4f operator + (const Matrix4f & rhs) const;
 	Matrix4f operator - (const Matrix4f & rhs) const;
 
 	Matrix4f Inverse() const;
+	Matrix4f InverseSSE() const;
 	Matrix4f Transpose() const;
 
+	float DotRow(int i, __m128 rhs);
+	static inline float CalcDotProductSse(__m128 x, __m128 y);
 	static Matrix4f Identity();
 	static Matrix4f GetTransformMatrix(float x, float y, float z);
 	static Matrix4f GetRotationMatrixX(float eulerAngle);
@@ -35,16 +42,25 @@ public:
 	void Show() const;
 
 private:
-	float m_Mat[16];
+	union
+	{
+		float m_Mat[16];
+		__m128 m_rows[4];
+		struct {
+			float m_11, m_12, m_13, m_14, m_21, m_22, m_23, m_24, m_31, m_32, m_33, m_34, m_41, m_42, m_43, m_44;
+		};
+	};
 };
 
 Matrix4f operator *(float lhs, const Matrix4f & rhs);
 inline Matrix4f::Matrix4f()
 {
-	for (unsigned int i = 0; i < 16; ++i)
+	/*for (unsigned int i = 0; i < 16; ++i)
 	{
 		m_Mat[i] = 0.0f;
-	}
+	}*/
+	for (unsigned int i = 0; i < 4; ++i)
+		m_rows[i] = _mm_setzero_ps();
 }
 
 inline Matrix4f::Matrix4f(float i00, float i01, float i02, float i03, float i10, float i11, float i12, float i13, float i20, float i21, float i22, float i23, float i30, float i31, float i32, float i33)
@@ -110,6 +126,19 @@ inline float Matrix4f::operator()(unsigned int _row, unsigned int _col) const
 		DEBUG_PRINT("Error", "Row or col out of bounds!");
 	}
 	return m_Mat[4 * _row + _col];
+}
+
+inline float Matrix4f::CalcDotProductSse(__m128 x, __m128 y)
+{
+	__m128 mulRes, shufReg, sumsReg;
+	mulRes = _mm_mul_ps(x, y);
+
+	// Calculates the sum of SSE Register - https://stackoverflow.com/a/35270026/195787
+	shufReg = _mm_movehdup_ps(mulRes);        // Broadcast elements 3,1 to 2,0
+	sumsReg = _mm_add_ps(mulRes, shufReg);
+	shufReg = _mm_movehl_ps(shufReg, sumsReg); // High Half -> Low Half
+	sumsReg = _mm_add_ss(sumsReg, shufReg);
+	return  _mm_cvtss_f32(sumsReg); // Result in the lower part of the SSE Register
 }
 
 inline Matrix4f Matrix4f::Identity()

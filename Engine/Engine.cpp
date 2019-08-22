@@ -2,9 +2,27 @@
 #include <assert.h>
 #include <iostream>
 #include "ConsoleLog.h"
+#include "Input.h"
+#include "PhysicsSystem.h"
+#include "Renderable.h"
+#include "Collision.h"
+#include "LuaCreateGO.h"
+#include "BaseController.h"
+std::vector<Engine::StrongPointer<Engine::GameObject>> Engine::AllGameObjects;
+std::vector<Engine::Physics::PhysicsSystem *> Engine::Physics::PhysicsInfo;
+std::vector<Engine::Render::Renderable *> Engine::Render::RenderableInfo;
+std::vector<Engine::CollisionSystem::Collision *> Engine::CollisionSystem::CollisionObjects;
+std::vector<Engine::Controller::BaseController *> Engine::Controller::Controllers;
+std::map<std::string, Engine::GlobalFuncPtr> * Engine::ControllerMapping = new std::map<std::string, Engine::GlobalFuncPtr>();
 
 bool Engine::Startup(HINSTANCE i_hInstance, HINSTANCE i_hPrevInstance, LPWSTR i_lpCmdLine, int i_nCmdShow)
 {
+	//PressToMove pressToMove;
+	Input::Init();
+	/*Input::ButtonChangeReceivers.AddDelegate(
+		Input::ButtonChangeReceiver_t::Create<PressToMove, &PressToMove::TestKeyCallback>(&pressToMove)
+	);*/
+	//Delegates__UnitTest();
 	// IMPORTANT: first we need to initialize GLib
 	return GLib::Initialize(i_hInstance, i_nCmdShow, "GLibTest", -1, 800, 600);
 }
@@ -24,7 +42,11 @@ GLib::Sprites::Sprite * Engine::CreateSprite(const char * i_pFilename)
 	void * pTextureFile = Engine::LoadFile(i_pFilename, sizeTextureFile);
 
 	// Ask GLib to create a texture out of the data (assuming it was loaded successfully)
-	GLib::Texture * pTexture = pTextureFile ? GLib::CreateTexture(pTextureFile, sizeTextureFile) : nullptr;
+	GLib::Texture * pTexture;
+	if (pTextureFile)
+		pTexture = GLib::CreateTexture(pTextureFile, sizeTextureFile);
+	else
+		pTexture = nullptr;
 
 	// exit if something didn't work
 	// probably need some debug logging in here!!!!

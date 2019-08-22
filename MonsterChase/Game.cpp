@@ -7,90 +7,53 @@
 #include "Renderable.h"
 #include "PhysicsSystem.h"
 #include "LuaCreateGO.h"
+#include "Collision.h"
 #include "MatrixVector4Unittest.h"
+#include "PlatformController.h"
+#include "RandomMoveController.h"
+#include "Engine.h"
 
-std::vector<StrongPointer<GameObject>> AllGameObjects;
-std::vector<Physics::PhysicsSystem *> Physics::PhysicsInfo;
-std::vector<Render::Renderable *> Render::RenderableInfo;
-
-void TestKeyCallback(unsigned int i_VKeyID, bool bWentDown)
-{
-	if (i_VKeyID == 'a' || i_VKeyID == 'A')
-	{
-		if (bWentDown)
-		{
-			DEBUG_PRINT("Info", "A pressed!");
-			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
-			{
-				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(-100.0f, 0.0f);
-			}
-		}
-		else
-		{
-			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
-			{
-				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(100.0f, 0.0f);
-			}
-		}
-
-	}
-	else if (i_VKeyID == 'd' || i_VKeyID == 'D')
-	{
-		if (bWentDown)
-		{
-			DEBUG_PRINT("Info", "D pressed!");
-			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
-			{
-				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(100.0f, 0.0f);
-			}
-		}
-		else
-		{
-			for (auto phy = Physics::PhysicsInfo.begin(); phy != Physics::PhysicsInfo.end(); ++phy)
-			{
-				Physics::PhysicsSystem * p = *phy;
-				p->AddForce(-100.0f, 0.0f);
-			}
-		}
-	}
-#ifdef _DEBUG
-	/*const size_t	lenBuffer = 65;
-	char			Buffer[lenBuffer];
-
-	sprintf_s(Buffer, lenBuffer, "VKey 0x%04x went %s\n", i_VKeyID, bWentDown ? "down" : "up");
-	OutputDebugStringA(Buffer);*/
-#endif // __DEBUG
-}
+bool Game::bQuit = false;
 
 bool Game::Startup()
 {
-	Unittest_Matrix_Vector();
+	//Unittest_Matrix_Vector();
+	//CollisionSystem::Collision_UnitTest();
+	Engine::RegisterController("platform", &Engine::Controller::PlatformController::PlatformControllerFactory);
+	Engine::RegisterController("randommove", &Engine::Controller::RandomMoveController::RandomMoveControllerFactory);
 	Engine::CreateGO("data\\player.lua");
-	// IMPORTANT (if we want keypress info from GLib): Set a callback for notification of key presses
-	GLib::SetKeyStateChangeCallback(TestKeyCallback);
-	Timing::deltaTime = Timing::Clock::now();
+	Engine::CreateGO("data\\enemy.lua");
+	Engine::CreateGO("data\\LeftWall.lua");
+	Engine::CreateGO("data\\RightWall.lua");
+	Engine::CreateGO("data\\Ceiling.lua");
+	//GLib::SetKeyStateChangeCallback(TestKeyCallback);
 
 	return true;
 }
 
 void Game::Run()
 {
-	bool bQuit = false;
+	using namespace Engine;
+	Timing::deltaTime = Timing::Clock::now();
 
 	do
 	{
+		float deltaTime = Timing::GetTimeSinceLastCall();
+		if (deltaTime > 2.0f)
+			deltaTime = 0.5f;
 		// IMPORTANT: We need to let GLib do it's thing.
 		GLib::Service(bQuit);
 
 		if (!bQuit)
 		{
-			float deltaTime = Timing::GetTimeSinceLastCall() / 1000.0f;
-			//DEBUG_PRINT("Time: ", "Time Since Last Call : %f", Timing::GetTimeSinceLastCall());
+			//deltaTime = 16.667f;
+			//ConsoleLog("asdasd", "%f", deltaTime);
+			//Collision
+			CollisionSystem::Update(deltaTime);
+			//Physics
 			Physics::Update(deltaTime);
-			//DEBUG_PRINT("Debug", "Character x pos: %f", (*AllGameObjects.begin())->GetPosition().getX());
+			//
+			Controller::Update();
 			// IMPORTANT: Tell GLib that we want to start rendering
 			GLib::BeginRendering();
 			// Tell GLib that we want to render some sprites
@@ -106,8 +69,20 @@ void Game::Run()
 
 void Game::Shutdown()
 {
+	using namespace Engine;
 	Physics::CleanUp();
 	Render::CleanUp();
+	CollisionSystem::CleanUp();
 	AllGameObjects.clear();
 	AllGameObjects.~vector();
+	Controller::CleanUp();
+	Input::Release();
+	ControllerMapping->clear();
+	delete ControllerMapping;
+	//ControllerMapping.~map();
+}
+
+void Game::GameOver()
+{
+	bQuit = true;
 }

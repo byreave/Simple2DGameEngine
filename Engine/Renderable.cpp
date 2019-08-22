@@ -1,11 +1,11 @@
 #include "Renderable.h"
 
-void Render::Renderable::Render() const
+void Engine::Render::Renderable::Render() const
 {
-	GLib::Sprites::RenderSprite(*m_Sprite, GetPosition(), 0.0f);
+	GLib::Sprites::RenderSprite(*m_Sprite, GetPosition(), m_Gameobject.AcquireOwnership()->GetZRotation() / 180.0f * 3.1415f);
 }
 
-void Render::RenderAll()
+void Engine::Render::RenderAll()
 {
 	for (auto it = RenderableInfo.begin(); it != RenderableInfo.end(); ++it)
 	{
@@ -14,7 +14,7 @@ void Render::RenderAll()
 	}
 }
 
-void Render::CleanUp()
+void Engine::Render::CleanUp()
 {
 	for (auto it = RenderableInfo.begin(); it != RenderableInfo.end(); ++it)
 	{

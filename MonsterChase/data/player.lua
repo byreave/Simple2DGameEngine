@@ -1,15 +1,23 @@
 Player = 
 {
-   name = "Byreave",
+   name = "Platform",
    initial_lives = 3,
-   initial_position = { 100.0, 150.0 },
+   initial_position = { -0.0, -350.0 },
+   initial_rotation = {0.0, 0.0, 0.0},
    
    physics_settings = {
-      mass = 1.0,
-      drag = 0.2
+      mass = 2.0,
+      drag = 0.0,
+      kinematic = true
    },
 
    render_settings = {
-      sprite = "data\\Tracer.dds"
-   }
+      sprite = "data\\BadGuy.dds"
+   },
+
+   collision_settings = {
+      center = {0.0, 118.0},
+      extents = {160.0, 118.0}
+   },
+   controller = "platform"
 }

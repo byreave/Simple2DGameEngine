@@ -2,21 +2,19 @@
 #include "ConsoleLog.h"
 
 //Midpoint Method
-void Physics::PhysicsSystem::Update(float deltaTime)
+void Engine::Physics::PhysicsSystem::Update(float deltaTime)
 {
-	Point2D<float> drag = - m_Velocity.getNormalized() * m_Velocity.getMagnitudeSqr() * m_DragCoef;
-	//m_Force -= m_Velocity.getNormalized() * m_Velocity.getMagnitudeSqr() * m_DragCoef;
-	DEBUG_PRINT("DBG", "drag x: %f, drag y: %f", drag.getX(), drag.getY());
-	m_Velocity = m_Velocity + ((m_Force + drag) / m_Mass) * deltaTime / 2.0f;
 	auto sp = m_GameObject.AcquireOwnership();
-	Point2D<float> newPos = sp->GetPosition() + m_Velocity * deltaTime;
+	Point2D<float> OldVel = sp->GetVelocity();
+	Point2D<float> drag = -OldVel.getNormalized() * OldVel.getMagnitudeSqr() * m_DragCoef;
+	//m_Force -= m_Velocity.getNormalized() * m_Velocity.getMagnitudeSqr() * m_DragCoef;
+	sp->SetVelocity(OldVel + ((m_Force + drag) / m_Mass) * deltaTime / 2.0f);
+	Point2D<float> newPos = sp->GetPosition() + sp->GetVelocity() * deltaTime;
 	sp->SetPosition(newPos);
 
-	//m_Force = Point2D<float>(0.0f, 0.0f);
-	//Update Drag
 }
 
-void Physics::Update(float deltaTime)
+void Engine::Physics::Update(float deltaTime)
 {
 	for (auto phyInfo = PhysicsInfo.begin(); phyInfo != PhysicsInfo.end(); ++phyInfo)
 	{
@@ -24,7 +22,7 @@ void Physics::Update(float deltaTime)
 	}
 }
 
-void Physics::CleanUp()
+void Engine::Physics::CleanUp()
 {
 	for (auto phyInfo = PhysicsInfo.begin(); phyInfo != PhysicsInfo.end(); ++phyInfo)
 	{
@@ -32,4 +30,24 @@ void Physics::CleanUp()
 		delete pPhysicsSystem;
 	}
 	PhysicsInfo.~vector();
+}
+
+Engine::Physics::PhysicsSystem * Engine::Physics::GetPhysicsSystem(const StrongPointer<GameObject>& gameObject)
+{
+	for (auto phyInfo = PhysicsInfo.begin(); phyInfo != PhysicsInfo.end(); ++phyInfo)
+	{
+		if((*phyInfo)->GetGameobject() == gameObject)
+			return *phyInfo;
+	}
+	return nullptr;
+}
+
+void Engine::Physics::PhysicsSystem_UnitTest()
+{
+	//initialize 10 physics component
+	for (int i = 0; i < 10; ++i)
+	{
+		GameObject* go = new GameObject("AAA", 3, Point2D<float>(-300.0f + 50.0f * i, 0.0f));
+		PhysicsInfo.push_back(new PhysicsSystem(StrongPointer<GameObject>(go)));
+	}
 }

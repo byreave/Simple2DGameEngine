@@ -1,6 +1,5 @@
 #include "GameObject.h"
-
-GameObject::~GameObject()
+Engine::GameObject::~GameObject()
 {
 	if (m_name != nullptr)
 	{
@@ -8,7 +7,7 @@ GameObject::~GameObject()
 		m_name = nullptr;
 	}
 }
-void GameObject::SetName(const char * newName)
+void Engine::GameObject::SetName(const char * newName)
 {
 	if (m_name != nullptr)
 		delete m_name;
